@@ -11,6 +11,10 @@
         ./hardware-configuration.nix
     ];
 
+    hardware.graphics.enable = true;
+    services.xserver.videoDrivers = ["nvidia"];
+    hardware.nvidia.open = true; # see the note above
+
     # Bootloader.
     boot.loader.systemd-boot.enable = true;
     boot.loader.efi.canTouchEfiVariables = true;
