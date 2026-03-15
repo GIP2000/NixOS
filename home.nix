@@ -14,6 +14,8 @@
         homeDirectory = "/home/gip";
         stateVersion = "25.11";
         packages = with pkgs; [
+            networkmanagerapplet
+            pwvucontrol
             discord
             spotify
             firefox
@@ -22,6 +24,7 @@
             ripgrep
             wl-clipboard
             bat
+            kitty
             (writeShellApplication {
                 name = "tmux-sessionizer";
                 runtimeInputs = [fzf];
@@ -64,6 +67,7 @@
         portalPackage = null;
         extraConfig = ''
             exec-once = waybar
+            # exec = nm-applet
             input {
                 repeat_delay = 150
                 repeat_rate  = 25
@@ -145,6 +149,10 @@
                 "$wmod SHIFT, s, movetoworkspace, 11"
                 "$wmod SHIFT, d, movetoworkspace, 12"
                 "$wmod SHIFT, r, movetoworkspace, 13"
+
+                ", XF86AudioRaiseVolume, exec, wpctl set-volume @DEFAULT_SINK@ 5%+"
+                ", XF86AudioLowerVolume, exec, wpctl set-volume @DEFAULT_SINK@ 5%-"
+                ", XF86AudioMute, exec, wpctl set-mute @DEFAULT_SINK@ toggle"
             ];
         };
     };
@@ -196,7 +204,9 @@
                         "clock"
                     ];
                     modules-right = [
+                        "tray"
                         "network"
+                        "pulseaudio"
                     ];
 
                     "hyprland/window" = {
@@ -242,7 +252,8 @@
                         tooltip-format-ethernet = " {ifname}";
                         tooltip-format-disconnected = "󰤦 Verbindung getrennt!";
                         tooltip-format-disabled = "󰤦 Verbindung ausgeschalten!";
-                        on-click = "hyprctl dispatch exec '[float; size 879 879] kitty nmtui'";
+                        # on-click = "hyprctl dispatch exec '[float; size 880 879] kitty nmtui'";
+                        on-click = "nm-applet --indicator";
                         on-click-right = "setsid ~/.config/swaync/scripts/netzwerk.sh";
                     };
                     clock = {
@@ -263,6 +274,17 @@
                                 today = "<span><b><u>{}</u></b></span>";
                             };
                         };
+                    };
+
+                    pulseaudio = {
+                        format = "{icon} {volume}%";
+                        format-muted = "🔇 muted";
+                        format-icons = {
+                            default = ["🔈" "🔉" "🔊"];
+                        };
+                        on-click = "pwvucontrol";
+                        on-scroll-up = "wpctl set-volume @DEFAULT_SINK@ 5%+";
+                        on-scroll-down = "wpctl set-volume @DEFAULT_SINK@ 5%-";
                     };
                 };
             };
