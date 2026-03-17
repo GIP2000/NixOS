@@ -99,6 +99,10 @@
     environment.systemPackages = with pkgs; [
         vim # Do not forget to add an editor to edit configuration.nix! The Nano editor is also installed by default.
         wget
+
+        adwaita-icon-theme
+        gnome-themes-extra
+        # dconf
     ];
 
     boot.extraModprobeConfig = ''
@@ -116,11 +120,13 @@
     #     card 0
     #     }
     # '';
-
+    services.gnome.gnome-keyring.enable = true;
     programs.hyprland = {
         enable = true;
         xwayland.enable = true;
     };
+
+    programs.dconf.enable = true;
 
     services.pipewire = {
         enable = true;

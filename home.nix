@@ -16,6 +16,7 @@
         packages = with pkgs; [
             networkmanagerapplet
             pwvucontrol
+            ulauncher
             discord
             spotify
             firefox
@@ -63,11 +64,14 @@
 
     wayland.windowManager.hyprland = {
         enable = true;
+        xwayland.enable = true;
         package = null;
         portalPackage = null;
         extraConfig = ''
             exec-once = waybar
-            # exec = nm-applet
+            exec-once = hyprctl dispatch workspace 10
+            exec-once = ulauncher --hide-window
+            exec = nm-applet --indicator
             input {
                 repeat_delay = 150
                 repeat_rate  = 25
@@ -105,8 +109,9 @@
             "$wmod" = "ALT";
             bind = [
                 "$mod, Q, killactive"
-                "$mod, B, exec, zen-beta"
                 "$mod, T, exec, ghostty"
+                "$mod, B, exec, zen-beta"
+                "$mod, Space, exec, ulauncher-toggle"
 
                 #Focus
                 "$wmod, j, movefocus, d"
@@ -175,6 +180,10 @@
             enable = true;
             settings = {
                 font-size = 20;
+
+                window-padding-x = 0;
+                window-padding-y = 0;
+                window-padding-balance = true;
             };
         };
 
