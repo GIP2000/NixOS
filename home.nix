@@ -163,6 +163,8 @@
     };
 
     programs = {
+        hyprshot.enable = true;
+
         git = {
             enable = true;
             settings = {
@@ -424,6 +426,7 @@
                             '';
                         };
                     };
+                    odin.enable = true;
                     ts.enable = true;
                     nix.enable = true;
                 };
