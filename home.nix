@@ -78,6 +78,7 @@
             }
         '';
         settings = {
+            monitor = "DP-3,2560x1440@143.86Hz,0x0,1";
             animations = {
                 enabled = true;
                 animation = [
@@ -164,6 +165,7 @@
 
     programs = {
         hyprshot.enable = true;
+        waybar = import ./waybar.nix;
 
         git = {
             enable = true;
@@ -186,118 +188,6 @@
                 window-padding-x = 0;
                 window-padding-y = 0;
                 window-padding-balance = true;
-            };
-        };
-
-        waybar = {
-            enable = true;
-            style = ''
-                * {
-                    font-family: JetBrainsMono Nerd Font Propo;
-                    font-size: 1.32375rem;
-                    font-weight: bold;
-                    border: none;
-                    outline: none;
-                    box-shadow: none;
-                    text-shadow: none;
-                }
-            '';
-            settings = {
-                mainBar = {
-                    layer = "top";
-                    position = "top";
-                    height = 30;
-                    modules-left = [
-                        "hyprland/window"
-                        "hyprland/workspaces"
-                    ];
-                    modules-center = [
-                        "clock"
-                    ];
-                    modules-right = [
-                        "tray"
-                        "network"
-                        "pulseaudio"
-                    ];
-
-                    "hyprland/window" = {
-                        format = "{initialTitle}";
-                        max-length = 80;
-                        icon = true;
-                        icon-size = 24;
-                    };
-
-                    "hyprland/workspaces" = {
-                        disable-scroll = true;
-                        all-outputs = false;
-                        format = "{icon}";
-                        format-icons = {
-                            default = "󰜌";
-                            active = "󰜋";
-                        };
-                        persistent-workspaces = {
-                            "10" = [];
-                            "11" = [];
-                            "12" = [];
-                            "13" = [];
-                        };
-                    };
-
-                    network = {
-                        tooltip = true;
-                        format = "{icon}";
-                        format-wifi = "{icon}";
-                        format-icons = {
-                            default = [
-                                "󰤯"
-                                "󰤟"
-                                "󰤢"
-                                "󰤥"
-                                "󰤨"
-                            ];
-                        };
-                        format-ethernet = "󰤨";
-                        format-disconnected = "󰤫";
-                        format-disabled = "󰤮";
-                        tooltip-format-wifi = "󰤥 {essid} ({signalStrength}%)";
-                        tooltip-format-ethernet = " {ifname}";
-                        tooltip-format-disconnected = "󰤦 Verbindung getrennt!";
-                        tooltip-format-disabled = "󰤦 Verbindung ausgeschalten!";
-                        # on-click = "hyprctl dispatch exec '[float; size 880 879] kitty nmtui'";
-                        on-click = "nm-applet --indicator";
-                        on-click-right = "setsid ~/.config/swaync/scripts/netzwerk.sh";
-                    };
-                    clock = {
-                        timezone = "America/New_York";
-                        tooltip-format = "<big>{:L%Y %B}</big>\n<tt><small>{calendar}</small></tt>";
-                        format = " {:%I:%M %p}";
-                        format-alt = "󰸗 {:L%a %d.%m.%y}";
-                        calendar = {
-                            mode = "year";
-                            mode-mon-col = 3;
-                            weeks-pos = "right";
-                            on-scroll = 1;
-                            format = {
-                                months = "<span><b>{}</b></span>";
-                                days = "<span><b>{}</b></span>";
-                                weeks = "<span><b>W{}</b></span>";
-                                weekdays = "<span><b>{}</b></span>";
-                                today = "<span><b><u>{}</u></b></span>";
-                            };
-                        };
-                    };
-
-                    pulseaudio = {
-                        format = "{icon} {volume}%";
-                        format-muted = "🔇 muted";
-                        format-icons = {
-                            default = ["🔈" "🔉" "🔊"];
-                        };
-                        on-click = "pwvucontrol";
-                        on-scroll-up = "wpctl set-volume @DEFAULT_SINK@ 5%+";
-                        on-scroll-down = "wpctl set-volume @DEFAULT_SINK@ 5%-";
-                    };
-                };
             };
         };
 
