@@ -22,6 +22,8 @@
 
     hardware.nvidia.modesetting.enable = true;
 
+    hardware.bluetooth.enable = true;
+
     environment.sessionVariables = {
         MOZ_ENABLE_WAYLAND = "1";
         __NV_PRIME_RENDER_OFFLOAD = "1";

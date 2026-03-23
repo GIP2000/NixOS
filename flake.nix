@@ -17,6 +17,17 @@
                 home-manager.follows = "home-manager";
             };
         };
+
+        astal = {
+            url = "github:aylur/astal";
+            inputs.nixpkgs.follows = "nixpkgs";
+        };
+
+        ags = {
+            url = "github:aylur/ags";
+            inputs.nixpkgs.follows = "nixpkgs";
+            inputs.astal.follows = "astal";
+        };
     };
     outputs = inputs @ {
         self,
@@ -28,10 +39,10 @@
             system = "x86_64-linux";
             specialArgs = {inherit inputs;};
             modules = [
-                ./configuration.nix
+                ./nixos/configuration.nix
                 home-manager.nixosModules.home-manager
                 {
-                    home-manager.users.gip = import ./home.nix;
+                    home-manager.users.gip = import ./home-manager/home.nix;
                     home-manager.extraSpecialArgs = {inherit inputs;};
                 }
             ];
