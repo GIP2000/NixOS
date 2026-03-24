@@ -136,7 +136,16 @@
 
     services.pipewire = {
         enable = true;
-        wireplumber.enable = true;
+        wireplumber = {
+            enable = true;
+            extraConfig = {
+                "move-streams" = {
+                    "wireplumber.settings" = {
+                        "move-streams-on-default-sink-change" = true;
+                    };
+                };
+            };
+        };
         alsa.enable = true;
         alsa.support32Bit = true;
         pulse.enable = true;

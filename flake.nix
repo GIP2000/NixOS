@@ -43,7 +43,10 @@
                 home-manager.nixosModules.home-manager
                 {
                     home-manager.users.gip = import ./home-manager/home.nix;
-                    home-manager.extraSpecialArgs = {inherit inputs;};
+                    home-manager.extraSpecialArgs = {
+                        inherit inputs;
+                        inherit self;
+                    };
                 }
             ];
         };

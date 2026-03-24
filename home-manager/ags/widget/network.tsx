@@ -25,7 +25,8 @@ function NetworkPopup() {
         <box orientation={Gtk.Orientation.VERTICAL}>
             <box>
                 <label label={currentSSID(ssid => `Wifi: ${ssid ?? "Off"}`)} />
-                <togglebutton active={wifiEnabled()} onToggled={({ active }) => network.wifi.set_enabled(active)} halign={Gtk.Align.END} />
+
+                <switch active={wifiEnabled()} onStateSet={({ active }) => network.wifi.set_enabled(active)} halign={Gtk.Align.END} />
             </box>
 
 
@@ -36,7 +37,7 @@ function NetworkPopup() {
                 }</For>
             </box>
 
-        </box >
+        </box>
 
     );
 
