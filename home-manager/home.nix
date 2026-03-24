@@ -75,8 +75,8 @@
             exec-once = hyprctl dispatch workspace 10
             exec-once = ulauncher --hide-window
             input {
-                repeat_delay = 150
-                repeat_rate  = 25
+                repeat_delay = 300
+                repeat_rate  = 30
             }
         '';
         settings = {
