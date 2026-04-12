@@ -2,6 +2,8 @@
     description = "NixOS with home-manager btw";
     inputs = {
         nixpkgs.url = "github:nixos/nixpkgs?ref=nixos-25.11";
+        nixpkgs-unstable.url = "github:NixOS/nixpkgs/nixos-unstable";
+
         home-manager.url = "github:nix-community/home-manager/release-25.11";
         home-manager.inputs.nixpkgs.follows = "nixpkgs";
         nvf.url = "github:NotAShelf/nvf";
@@ -21,12 +23,6 @@
         astal = {
             url = "github:aylur/astal";
             inputs.nixpkgs.follows = "nixpkgs";
-        };
-
-        ags = {
-            url = "github:aylur/ags";
-            inputs.nixpkgs.follows = "nixpkgs";
-            inputs.astal.follows = "astal";
         };
     };
     outputs = inputs @ {

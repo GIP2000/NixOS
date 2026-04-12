@@ -4,11 +4,12 @@
     inputs,
     self,
     ...
-}: {
+}: let
+    pkgs-unstable = import inputs.nixpkgs-unstable {system = pkgs.system;};
+in {
     imports = [
         inputs.nvf.homeManagerModules.default
         inputs.zen-browser.homeModules.default
-        inputs.ags.homeManagerModules.default
     ];
 
     home = {
@@ -16,6 +17,7 @@
         homeDirectory = "/home/gip";
         stateVersion = "25.11";
         packages = with pkgs; [
+            blueman
             networkmanagerapplet
             pwvucontrol
             ulauncher
@@ -71,7 +73,7 @@
         package = null;
         portalPackage = null;
         extraConfig = ''
-            exec = zsh -c 'ags quit || ags run ${builtins.toString ./.}/ags'
+            exec-once = ashell
             exec-once = hyprctl dispatch workspace 10
             exec-once = ulauncher --hide-window
             input {
@@ -166,17 +168,24 @@
     };
 
     programs = {
-        ags = {
+        ashell = {
             enable = true;
-            configDir = ./ags;
-            extraPackages = with pkgs; [
-                inputs.astal.packages.${pkgs.system}.hyprland
-                inputs.astal.packages.${pkgs.system}.network
-                inputs.astal.packages.${pkgs.system}.bluetooth
-                inputs.astal.packages.${pkgs.system}.wireplumber
-                fzf
-            ];
+            package = pkgs-unstable.ashell;
+            settings = {
+                modules = {
+                    left = ["Workspaces"];
+                    center = ["Tempo"];
+                    right = [["Privacy" "Settings"]];
+                };
+                tempo = {
+                    clock_format = "%a %e %b | %I:%M %p";
+                };
+                settings = {
+                    bluetooth_more_cmd = "blueman-manager";
+                };
+            };
         };
+
         hyprshot.enable = true;
 
         git = {
@@ -271,6 +280,7 @@
             in {
                 lsp = {
                     enable = true;
+
                     formatOnSave = true;
                     mappings = {
                         hover = "K";
@@ -311,6 +321,7 @@
                 languages = {
                     enableTreesitter = true;
                     enableFormat = true;
+                    tailwind.enable = true;
                     rust = {
                         enable = true;
                         lsp = {
@@ -330,6 +341,8 @@
                     };
                     odin.enable = true;
                     ts.enable = true;
+                    ts.format.type = ["biome"];
+                    ts.format.enable = true;
                     nix.enable = true;
                 };
 
@@ -506,6 +519,14 @@
                         url = "https://calendar.google.com";
                         isEssential = true;
                         position = 105;
+                    };
+
+                    whatsapp = {
+                        id = "9dcde9f9-42f0-4a00-9aee-4bf1327aeb34";
+                        container = containers.Personal.id;
+                        url = "https://web.whatsapp.com/";
+                        isEssential = true;
+                        position = 106;
                     };
                 };
             in {
