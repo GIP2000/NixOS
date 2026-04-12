@@ -17,8 +17,8 @@ in {
         homeDirectory = "/home/gip";
         stateVersion = "25.11";
         packages = with pkgs; [
+            prismlauncher
             blueman
-            networkmanagerapplet
             pwvucontrol
             ulauncher
             discord
@@ -30,7 +30,7 @@ in {
             wl-clipboard
             bat
             kitty
-            inputs.astal.packages.${pkgs.system}.notifd
+            # inputs.astal.packages.${pkgs.system}.notifd
             (writeShellApplication {
                 name = "tmux-sessionizer";
                 runtimeInputs = [fzf];
@@ -339,10 +339,19 @@ in {
                             '';
                         };
                     };
+
+                    ts = {
+                        enable = true;
+                        format = {
+                            enable = true;
+                            type = ["biome"];
+                        };
+                        extraDiagnostics = {
+                            enable = true;
+                            types = ["biomejs"];
+                        };
+                    };
                     odin.enable = true;
-                    ts.enable = true;
-                    ts.format.type = ["biome"];
-                    ts.format.enable = true;
                     nix.enable = true;
                 };
 
