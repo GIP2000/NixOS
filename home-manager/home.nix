@@ -30,7 +30,6 @@ in {
             wl-clipboard
             bat
             kitty
-            # inputs.astal.packages.${pkgs.system}.notifd
             (writeShellApplication {
                 name = "tmux-sessionizer";
                 runtimeInputs = [fzf];
@@ -174,11 +173,11 @@ in {
             settings = {
                 modules = {
                     left = ["Workspaces"];
-                    center = ["Tempo"];
+                    center = ["Clock"];
                     right = [["Privacy" "Settings"]];
                 };
-                tempo = {
-                    clock_format = "%a %e %b | %I:%M %p";
+                clock = {
+                    format = "%a %e %b | %I:%M %p";
                 };
                 settings = {
                     bluetooth_more_cmd = "blueman-manager";
@@ -278,6 +277,8 @@ in {
                 xnoremap = bind "x";
                 inoremap = bind "i";
             in {
+                package = pkgs-unstable.neovim-unwrapped;
+
                 lsp = {
                     enable = true;
 

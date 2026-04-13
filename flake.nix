@@ -19,11 +19,6 @@
                 home-manager.follows = "home-manager";
             };
         };
-
-        # astal = {
-        #     url = "github:aylur/astal";
-        #     inputs.nixpkgs.follows = "nixpkgs";
-        # };
     };
     outputs = inputs @ {
         self,
