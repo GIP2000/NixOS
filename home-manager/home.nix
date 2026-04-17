@@ -5,7 +5,11 @@
     self,
     ...
 }: let
-    pkgs-unstable = import inputs.nixpkgs-unstable {system = pkgs.system;};
+    pkgs-unstable = import inputs.nixpkgs-unstable {
+        system = pkgs.system;
+    };
+    ashell-flake = inputs.ashell.packages.${pkgs.system}.default;
+    wallpaper = ./wallpapers/earth.jpg;
 in {
     imports = [
         inputs.nvf.homeManagerModules.default
@@ -17,15 +21,16 @@ in {
         homeDirectory = "/home/gip";
         stateVersion = "25.11";
         packages = with pkgs; [
-            prismlauncher
+            prismlauncher # minecraft modpack loader
             blueman
+            playerctl
             pwvucontrol
             ulauncher
             discord
             spotify
             firefox
             zsh-powerlevel10k
-            alsa-utils
+            alsa-utils # audio command line utils
             ripgrep
             wl-clipboard
             bat
@@ -64,6 +69,18 @@ in {
                 '';
             })
         ];
+    };
+
+    services.hyprpaper = {
+        enable = true;
+        settings = {
+            preload = [
+                "${wallpaper}"
+            ];
+            wallpaper = [
+                ",${wallpaper}"
+            ];
+        };
     };
 
     wayland.windowManager.hyprland = {
@@ -162,6 +179,10 @@ in {
                 ", XF86AudioRaiseVolume, exec, wpctl set-volume @DEFAULT_SINK@ 5%+"
                 ", XF86AudioLowerVolume, exec, wpctl set-volume @DEFAULT_SINK@ 5%-"
                 ", XF86AudioMute, exec, wpctl set-mute @DEFAULT_SINK@ toggle"
+
+                ", XF86AudioPlay, exec, playerctl play-pause"
+                ", XF86AudioNext, exec, playerctl next"
+                ", XF86AudioPrev, exec, playerctl previous"
             ];
         };
     };
@@ -169,18 +190,46 @@ in {
     programs = {
         ashell = {
             enable = true;
-            package = pkgs-unstable.ashell;
+            package = ashell-flake;
             settings = {
                 modules = {
-                    left = ["Workspaces"];
-                    center = ["Clock"];
-                    right = [["Privacy" "Settings"]];
+                    left = ["WindowTitle" "Workspaces"];
+                    center = ["Tempo"];
+                    right = ["MediaPlayer" ["Privacy" "Settings"]];
                 };
-                clock = {
-                    format = "%a %e %b | %I:%M %p";
+                tempo = {
+                    clock_format = "%a %e %b | %I:%M %p";
+                    weather_location = "Current";
+                    weather_indicator = "IconAndTemperature";
                 };
                 settings = {
                     bluetooth_more_cmd = "blueman-manager";
+                };
+                appearance = {
+                    success_color = "#a6e3a1";
+                    text_color = "#cdd6f4";
+                    workspace_colors = ["#fab387" "#b4befe" "#cba6f7"];
+                };
+
+                appearance.primary_color = {
+                    base = "#fab387";
+                    text = "#1e1e2e";
+                };
+
+                appearance.danger_color = {
+                    base = "#f38ba8";
+                    weak = "#f9e2af";
+                };
+
+                appearance.background_color = {
+                    base = "#1e1e2e";
+                    weak = "#313244";
+                    strong = "#45475a";
+                };
+
+                appearance.secondary_color = {
+                    base = "#11111b";
+                    strong = "#1b1b25";
                 };
             };
         };
@@ -277,7 +326,7 @@ in {
                 xnoremap = bind "x";
                 inoremap = bind "i";
             in {
-                package = pkgs-unstable.neovim-unwrapped;
+                # package = pkgs-unstable.neovim-unwrapped;
 
                 lsp = {
                     enable = true;

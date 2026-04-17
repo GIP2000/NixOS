@@ -6,8 +6,15 @@
 
         home-manager.url = "github:nix-community/home-manager/release-25.11";
         home-manager.inputs.nixpkgs.follows = "nixpkgs";
-        nvf.url = "github:NotAShelf/nvf";
-        nvf.inputs.nixpkgs.follows = "nixpkgs";
+        nvf = {
+            url = "github:NotAShelf/nvf";
+            inputs.nixpkgs.follows = "nixpkgs-unstable";
+        };
+        ashell = {
+            url = "github:MalpenZibo/ashell";
+            inputs.nixpkgs.follows = "nixpkgs-unstable";
+        };
+
         firefox-addons = {
             url = "gitlab:rycee/nur-expressions?dir=pkgs/firefox-addons";
             inputs.nixpkgs.follows = "nixpkgs";
