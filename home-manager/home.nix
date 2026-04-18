@@ -8,7 +8,6 @@
     pkgs-unstable = import inputs.nixpkgs-unstable {
         system = pkgs.system;
     };
-    ashell-flake = inputs.ashell.packages.${pkgs.system}.default;
     wallpaper = ./wallpapers/earth.jpg;
 in {
     imports = [
@@ -25,7 +24,6 @@ in {
             blueman
             playerctl
             pwvucontrol
-            ulauncher
             discord
             spotify
             firefox
@@ -99,7 +97,7 @@ in {
         extraConfig = ''
             exec-once = ashell
             exec-once = hyprctl dispatch workspace 10
-            exec-once = ulauncher --hide-window
+            # exec-once = ulauncher --hide-window
             input {
                 repeat_delay = 300
                 repeat_rate  = 30
@@ -140,7 +138,8 @@ in {
                 "$mod, Q, killactive"
                 "$mod, T, exec, ghostty"
                 "$mod, B, exec, zen-beta"
-                "$mod, Space, exec, ulauncher-toggle"
+                # "$mod, Space, exec, ulauncher-toggle"
+                "$mod, Space, exec, rofi -show combi"
 
                 #Focus
                 "$wmod, j, movefocus, d"
@@ -198,7 +197,7 @@ in {
     programs = {
         ashell = {
             enable = true;
-            package = ashell-flake;
+            package = pkgs-unstable.ashell;
             settings = {
                 modules = {
                     left = ["WindowTitle" "Workspaces"];
@@ -257,6 +256,17 @@ in {
                 init.defaultBranch = "main";
             };
         };
+        rofi = {
+            enable = true;
+            terminal = "${pkgs.ghostty}/bin/ghostty";
+            theme = "gruvbox-dark";
+            extraConfig = {
+                modi = "drun,run,combi";
+                show-icons = true;
+                font = "JetBrains Mono 12";
+            };
+        };
+
         ghostty = {
             enable = true;
             settings = {

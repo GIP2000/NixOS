@@ -6,12 +6,9 @@
 
         home-manager.url = "github:nix-community/home-manager/release-25.11";
         home-manager.inputs.nixpkgs.follows = "nixpkgs";
+
         nvf = {
             url = "github:NotAShelf/nvf";
-            inputs.nixpkgs.follows = "nixpkgs-unstable";
-        };
-        ashell = {
-            url = "github:MalpenZibo/ashell";
             inputs.nixpkgs.follows = "nixpkgs-unstable";
         };
 
