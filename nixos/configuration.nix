@@ -13,14 +13,15 @@
 
     hardware.graphics.enable = true;
     services.xserver.videoDrivers = ["nvidia"];
-    hardware.nvidia.open = false; # see the note above
-    hardware.nvidia.prime = {
-        sync.enable = true;
-        nvidiaBusId = "PCI:1:0:0";
-        amdgpuBusId = "PCI:14:0:0";
+    hardware.nvidia = {
+        open = false;
+        modesetting.enable = true;
+        prime = {
+            sync.enable = true;
+            nvidiaBusId = "PCI:1:0:0";
+            amdgpuBusId = "PCI:14:0:0";
+        };
     };
-
-    hardware.nvidia.modesetting.enable = true;
 
     hardware.bluetooth.enable = true;
 
@@ -29,11 +30,14 @@
         __NV_PRIME_RENDER_OFFLOAD = "1";
         __GLX_VENDOR_LIBRARY_NAME = "nvidia";
         __VK_LAYER_NV_optimus = "NVIDIA_only";
+        GBM_BACKEND = "nvidia-drm";
     };
 
     # Bootloader.
     boot.loader.systemd-boot.enable = true;
     boot.loader.efi.canTouchEfiVariables = true;
+
+    boot.kernelParams = ["nvidia-drm.modeset=1"];
 
     networking.hostName = "nixos"; # Define your hostname.
     # networking.wireless.enable = true;  # Enables wireless support via wpa_supplicant.
