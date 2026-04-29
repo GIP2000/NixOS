@@ -77,8 +77,8 @@
                     };
                 };
             in {
-                containersForce = true;
-                spacesForce = true;
+                containersForce = false;
+                spacesForce = false;
                 pinsForce = false;
                 inherit containers pins spaces;
                 search = {

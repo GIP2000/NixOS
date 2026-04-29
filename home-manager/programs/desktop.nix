@@ -7,6 +7,22 @@
         system = pkgs.stdenv.hostPlatform.system;
     };
     wallpaper = ../wallpapers/earth.jpg;
+
+    catppuccinMocha = builtins.fetchurl {
+        url = "https://raw.githubusercontent.com/catppuccin/rofi/main/themes/catppuccin-mocha.rasi";
+        sha256 = "0ikn0yc2b9cyzk4xga8mcq1j7xk2idik4wzpsibrphy8qr2pla4b";
+    };
+    catppuccinDefault = builtins.fetchurl {
+        url = "https://raw.githubusercontent.com/catppuccin/rofi/main/catppuccin-default.rasi";
+        sha256 = "1f3r6yarrykj8cxvi5hblzlr5n8zbncifnxps9xl5gl32w6ysq5z";
+    };
+    catppuccinTheme = pkgs.writeTextFile {
+        name = "catppuccin-rofi-config";
+        text = ''
+            @import "${catppuccinMocha}"
+            @import "${catppuccinDefault}"
+        '';
+    };
 in {
     home.pointerCursor = {
         gtk.enable = true;
@@ -146,34 +162,34 @@ in {
                     weather_location = "Current";
                     weather_indicator = "IconAndTemperature";
                 };
+                media_player = {
+                    max_title_length = 20;
+                };
                 settings = {
                     bluetooth_more_cmd = "blueman-manager";
                 };
+
                 appearance = {
-                    success_color = "#a6e3a1";
-                    text_color = "#cdd6f4";
-                    workspace_colors = ["#fab387" "#b4befe" "#cba6f7"];
-                };
+                    primary_color = "#7aa2f7";
+                    success_color = "#9ece6a";
+                    text_color = "#a9b1d6";
 
-                appearance.primary_color = {
-                    base = "#fab387";
-                    text = "#1e1e2e";
-                };
+                    workspace_colors = ["#7aa2f7" "#9ece6a"];
 
-                appearance.danger_color = {
-                    base = "#f38ba8";
-                    weak = "#f9e2af";
-                };
+                    danger_color = {
+                        base = "#f7768e";
+                        weak = "#e0af68";
+                    };
 
-                appearance.background_color = {
-                    base = "#1e1e2e";
-                    weak = "#313244";
-                    strong = "#45475a";
-                };
+                    background_color = {
+                        base = "#1a1b26";
+                        weak = "#24273a";
+                        strong = "#414868";
+                    };
 
-                appearance.secondary_color = {
-                    base = "#11111b";
-                    strong = "#1b1b25";
+                    secondary_color = {
+                        base = "#0c0d14";
+                    };
                 };
             };
         };
@@ -182,12 +198,17 @@ in {
         rofi = {
             enable = true;
             terminal = "${pkgs.ghostty}/bin/ghostty";
-            theme = "gruvbox-dark";
+            theme = "${catppuccinTheme}";
             extraConfig = {
-                modi = "drun,run,combi";
+                modi = "drun,run,calc,combi";
+                combi-modes = "drun,run,calc";
                 show-icons = true;
                 font = "JetBrains Mono 12";
+
+                no-show-match = true;
+                no-sort = true;
             };
+            plugins = with pkgs; [rofi-calc];
         };
     };
 }
