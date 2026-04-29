@@ -8,14 +8,23 @@
             name = "tmux-sessionizer";
             runtimeInputs = [fzf];
             text = ''
-                if [[ $# -eq 1 ]]; then
+                if [[ $# -eq 2 ]]; then
                     selected=$1
                 else
-                    selected=$(  find ~/Documents/dev -mindepth 1 -maxdepth 1 -type d | fzf)
+                    result=$(  { echo "$HOME/Documents/dev"; find ~/Documents/dev -mindepth 1 -maxdepth 1 -type d; } | fzf --delimiter '/' --with-nth=-1 --print-query || true)
                 fi
 
-                if [[ -z $selected ]]; then
-                    exit 0
+                query=$(sed -n '1p' <<< "''${result:-}")
+                selected=$(sed -n '2p' <<< "''${result:-}")
+
+                if [[ -z "''${selected:-}" ]]; then
+                    if [[ -z "''${query:-}" ]]; then
+                        printf "No query provided, aborting\n"
+                        exit 1
+                    fi
+
+                    selected="$HOME/Documents/dev/$query"
+                    mkdir -p "$selected"
                 fi
 
                 selected_name=$(basename "$selected" | tr . _)
