@@ -4,10 +4,18 @@
     ...
 }: let
     pkgs-unstable = import inputs.nixpkgs-unstable {
-        system = pkgs.system;
+        system = pkgs.stdenv.hostPlatform.system;
     };
     wallpaper = ../wallpapers/earth.jpg;
 in {
+    home.pointerCursor = {
+        gtk.enable = true;
+        hyprcursor.enable = true;
+        name = "Bibata-Modern-Classic";
+        package = pkgs.bibata-cursors;
+        size = 24;
+    };
+
     services.hyprpaper = {
         enable = true;
         settings = {
@@ -131,7 +139,7 @@ in {
                 modules = {
                     left = ["WindowTitle" "Workspaces"];
                     center = ["Tempo"];
-                    right = ["MediaPlayer" ["Privacy" "Settings"]];
+                    right = ["SystemInfo" "MediaPlayer" ["Privacy" "Settings"]];
                 };
                 tempo = {
                     clock_format = "%a %e %b | %I:%M %p";

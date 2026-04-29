@@ -81,6 +81,9 @@
                 spacesForce = true;
                 pinsForce = false;
                 inherit containers pins spaces;
+                search = {
+                    default = "ddg";
+                };
             };
         };
     };

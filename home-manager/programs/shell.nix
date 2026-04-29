@@ -1,9 +1,9 @@
 {pkgs, ...}: {
     home.packages = with pkgs; [
-        kitty
         zsh-powerlevel10k
         bat
         wl-clipboard
+        unzip
         (writeShellApplication {
             name = "tmux-sessionizer";
             runtimeInputs = [fzf];

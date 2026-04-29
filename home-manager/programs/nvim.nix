@@ -22,7 +22,7 @@
         in {
             lsp = {
                 enable = true;
-
+                presets.tailwindcss-language-server.enable = true;
                 formatOnSave = true;
                 mappings = {
                     hover = "K";
@@ -63,7 +63,6 @@
             languages = {
                 enableTreesitter = true;
                 enableFormat = true;
-                tailwind.enable = true;
                 rust = {
                     enable = true;
                     lsp = {

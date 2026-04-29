@@ -16,21 +16,16 @@
     hardware.nvidia = {
         open = false;
         modesetting.enable = true;
-        prime = {
-            sync.enable = true;
-            nvidiaBusId = "PCI:1:0:0";
-            amdgpuBusId = "PCI:14:0:0";
-        };
     };
 
     hardware.bluetooth.enable = true;
 
     environment.sessionVariables = {
         MOZ_ENABLE_WAYLAND = "1";
-        __NV_PRIME_RENDER_OFFLOAD = "1";
-        __GLX_VENDOR_LIBRARY_NAME = "nvidia";
-        __VK_LAYER_NV_optimus = "NVIDIA_only";
-        GBM_BACKEND = "nvidia-drm";
+        # __NV_PRIME_RENDER_OFFLOAD = "1";
+        # __GLX_VENDOR_LIBRARY_NAME = "nvidia";
+        # __VK_LAYER_NV_optimus = "NVIDIA_only";
+        # GBM_BACKEND = "nvidia-drm";
     };
 
     # Bootloader.
