@@ -44,6 +44,16 @@
     # Enable networking
     networking.networkmanager.enable = true;
 
+    # This is the ports for KDEConnect
+    networking.firewall = rec {
+        allowedTCPPortRanges = [
+            {
+                from = 1714;
+                to = 1764;
+            }
+        ];
+        allowedUDPPortRanges = allowedTCPPortRanges;
+    };
     # Set your time zone.
     time.timeZone = "America/New_York";
 
@@ -86,7 +96,7 @@
     users.users.gip = {
         isNormalUser = true;
         description = "Gregory Presser";
-        extraGroups = ["networkmanager" "wheel"];
+        extraGroups = ["networkmanager" "wheel" "kvm"];
         shell = pkgs.zsh;
     };
 

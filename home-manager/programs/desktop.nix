@@ -32,6 +32,10 @@ in {
         size = 24;
     };
 
+    services.kdeconnect = {
+        enable = true;
+    };
+
     services.hyprpaper = {
         enable = true;
         settings = {
@@ -49,15 +53,14 @@ in {
         xwayland.enable = true;
         package = null;
         portalPackage = null;
-        extraConfig = ''
-            exec-once = ashell
-            exec-once = hyprctl dispatch workspace 10
-            input {
-                repeat_delay = 300
-                repeat_rate  = 30
-            }
-        '';
         settings = {
+            input = {
+                repeat_delay = 300;
+                repeat_rate = 30;
+            };
+            exec-once = [
+                "ashell"
+            ];
             animations = {
                 enabled = true;
                 animation = [
@@ -91,7 +94,7 @@ in {
                 "$mod, Q, killactive"
                 "$mod, T, exec, ghostty"
                 "$mod, B, exec, zen-beta"
-                # "$mod, Space, exec, ulauncher-toggle"
+                "$mod, S, exec, hyprshot -m region --clipboard-only"
                 "$mod, Space, exec, rofi -show combi"
 
                 #Focus
@@ -120,6 +123,7 @@ in {
                 "$wmod, s, workspace, 11"
                 "$wmod, d, workspace, 12"
                 "$wmod, r, workspace, 13"
+                "$wmod, f, togglespecialworkspace"
 
                 # Workspaces move
                 "$wmod SHIFT, 1, movetoworkspace,  1"
@@ -135,6 +139,7 @@ in {
                 "$wmod SHIFT, s, movetoworkspace, 11"
                 "$wmod SHIFT, d, movetoworkspace, 12"
                 "$wmod SHIFT, r, movetoworkspace, 13"
+                "$wmod SHIFT, f, movetoworkspace, special"
 
                 ", XF86AudioRaiseVolume, exec, wpctl set-volume @DEFAULT_SINK@ 5%+"
                 ", XF86AudioLowerVolume, exec, wpctl set-volume @DEFAULT_SINK@ 5%-"
@@ -156,6 +161,10 @@ in {
                     left = ["WindowTitle" "Workspaces"];
                     center = ["Tempo"];
                     right = ["SystemInfo" "MediaPlayer" ["Privacy" "Settings"]];
+                };
+                window_title = {
+                    # mode = "Class";
+                    truncate_title_after_length = 50;
                 };
                 tempo = {
                     clock_format = "%a %e %b | %I:%M %p";

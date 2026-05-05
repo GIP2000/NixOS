@@ -13,6 +13,7 @@
         stateVersion = "25.11";
         packages = with pkgs; [
             prismlauncher
+            rpcs3
             (symlinkJoin {
                 # this forces sioyek to run on my IGPU because its messed up on Nvidia
                 name = "sioyek";
@@ -30,6 +31,13 @@
         misc = {
             vrr = 2;
         };
-        monitor = "DP-3,2560x1440@143.86Hz,0x0,1";
+        monitor = [
+            "DP-3,2560x1440@143.86Hz,0x0,1"
+            "HDMI-A-2,2560x1440@143.99899Hz,-2560x0,1"
+        ];
+
+        exec-once = [
+            "hyprctl dispatch moveworkspacetomonitor 10 DP-3 && hyprctl dispatch focusmonitor DP-3 && hyprctl dispatch workspace 10"
+        ];
     };
 }

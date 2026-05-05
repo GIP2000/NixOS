@@ -4,6 +4,8 @@
     ];
 
     programs = {
+        # zen doesn't have a DRM yet so this is so I can watch netflix
+        firefox.enable = true;
         zen-browser = {
             enable = true;
             profiles.default = let

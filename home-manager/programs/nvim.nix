@@ -94,6 +94,7 @@
                 };
                 odin.enable = true;
                 nix.enable = true;
+                dart.enable = true;
             };
 
             git.vim-fugitive.enable = true;

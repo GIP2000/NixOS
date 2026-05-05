@@ -11,7 +11,7 @@
                 if [[ $# -eq 2 ]]; then
                     selected=$1
                 else
-                    result=$(  { echo "$HOME/Documents/dev"; find ~/Documents/dev -mindepth 1 -maxdepth 1 -type d; } | fzf --delimiter '/' --with-nth=-1 --print-query || true)
+                    result=$(  { find ~/ -mindepth 1 -maxdepth 2 -type d ! -regex '.*\..*'; find ~/Documents/dev -mindepth 1 -maxdepth 1 -type d; } | fzf --delimiter '/' --with-nth=-1 --print-query || true)
                 fi
 
                 query=$(sed -n '1p' <<< "''${result:-}")
