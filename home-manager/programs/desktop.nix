@@ -54,6 +54,9 @@ in {
         package = null;
         portalPackage = null;
         settings = {
+            misc = {
+                middle_click_paste = false;
+            };
             input = {
                 repeat_delay = 300;
                 repeat_rate = 30;
@@ -141,6 +144,11 @@ in {
                 "$wmod SHIFT, r, movetoworkspace, 13"
                 "$wmod SHIFT, f, movetoworkspace, special"
 
+                "$wmod, T, togglefloating"
+                "$wmod, T, resizeactive, exact 1600 1080"
+                "$wmod, T, centerwindow"
+
+                # Special Keys
                 ", XF86AudioRaiseVolume, exec, wpctl set-volume @DEFAULT_SINK@ 5%+"
                 ", XF86AudioLowerVolume, exec, wpctl set-volume @DEFAULT_SINK@ 5%-"
                 ", XF86AudioMute, exec, wpctl set-mute @DEFAULT_SINK@ toggle"
@@ -148,6 +156,10 @@ in {
                 ", XF86AudioPlay, exec, playerctl play-pause"
                 ", XF86AudioNext, exec, playerctl next"
                 ", XF86AudioPrev, exec, playerctl previous"
+            ];
+            bindm = [
+                "$mod, mouse:272, movewindow"
+                "$mod, mouse:273, resizewindow"
             ];
         };
     };

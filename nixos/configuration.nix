@@ -22,10 +22,6 @@
 
     environment.sessionVariables = {
         MOZ_ENABLE_WAYLAND = "1";
-        # __NV_PRIME_RENDER_OFFLOAD = "1";
-        # __GLX_VENDOR_LIBRARY_NAME = "nvidia";
-        # __VK_LAYER_NV_optimus = "NVIDIA_only";
-        # GBM_BACKEND = "nvidia-drm";
     };
 
     # Bootloader.
@@ -137,7 +133,7 @@
     #     card 0
     #     }
     # '';
-    services.gnome.gnome-keyring.enable = true;
+    # services.gnome.gnome-keyring.enable = true;
     programs.hyprland = {
         enable = true;
         xwayland.enable = true;
