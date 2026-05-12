@@ -3,9 +3,9 @@
     inputs,
     ...
 }: let
-    pkgs-unstable = import inputs.nixpkgs-unstable {
-        system = pkgs.stdenv.hostPlatform.system;
-    };
+    # pkgs-unstable = import inputs.nixpkgs-unstable {
+    #     system = pkgs.stdenv.hostPlatform.system;
+    # };
     wallpaper = ../wallpapers/earth.jpg;
 
     catppuccinMocha = builtins.fetchurl {
@@ -43,7 +43,10 @@ in {
                 "${wallpaper}"
             ];
             wallpaper = [
-                ",${wallpaper}"
+                {
+                    monitor = "";
+                    path = "${wallpaper}";
+                }
             ];
         };
     };
@@ -51,6 +54,7 @@ in {
     wayland.windowManager.hyprland = {
         enable = true;
         xwayland.enable = true;
+        systemd.enable = false;
         package = null;
         portalPackage = null;
         settings = {
@@ -167,7 +171,7 @@ in {
     programs = {
         ashell = {
             enable = true;
-            package = pkgs-unstable.ashell;
+            # package = pkgs-unstable.ashell;
             settings = {
                 modules = {
                     left = ["WindowTitle" "Workspaces"];

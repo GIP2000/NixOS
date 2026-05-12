@@ -137,6 +137,7 @@
     programs.hyprland = {
         enable = true;
         xwayland.enable = true;
+        withUWSM = true;
     };
     services.displayManager.sddm = {
         enable = true;
