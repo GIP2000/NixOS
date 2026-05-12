@@ -79,9 +79,9 @@
                     };
                 };
             in {
-                containersForce = false;
-                spacesForce = false;
-                pinsForce = false;
+                containersForce = true;
+                spacesForce = true;
+                pinsForce = true;
                 inherit containers pins spaces;
                 search = {
                     default = "ddg";

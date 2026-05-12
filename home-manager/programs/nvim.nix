@@ -1,6 +1,7 @@
 {
     pkgs,
     inputs,
+    lib,
     ...
 }: {
     imports = [
@@ -36,6 +37,8 @@
                     renameSymbol = "<leader>lr";
                     signatureHelp = "<leader>ls";
                 };
+
+                servers.zls.cmd = lib.mkForce ["zls"];
             };
 
             autocomplete.nvim-cmp = {
@@ -95,6 +98,10 @@
                 odin.enable = true;
                 nix.enable = true;
                 dart.enable = true;
+                zig = {
+                    enable = true;
+                    lsp.servers = ["zls"];
+                };
             };
 
             git.vim-fugitive.enable = true;
