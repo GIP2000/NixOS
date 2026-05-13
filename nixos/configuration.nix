@@ -137,11 +137,15 @@
     programs.hyprland = {
         enable = true;
         xwayland.enable = true;
-        withUWSM = true;
+        withUWSM = false;
     };
-    services.displayManager.sddm = {
+
+    services.greetd = {
         enable = true;
-        wayland.enable = true;
+        settings.default_session = {
+            command = "${pkgs.tuigreet}/bin/tuigreet --time --remember --cmd ${pkgs.hyprland}/bin/start-hyprland";
+            user = "greeter";
+        };
     };
 
     programs.dconf.enable = true;

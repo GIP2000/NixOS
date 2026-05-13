@@ -2,10 +2,11 @@
     description = "NixOS with home-manager btw";
     inputs = {
         nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
-        # nixpkgs-unstable.url = "github:NixOS/nixpkgs/nixos-unstable";
 
-        home-manager.url = "github:nix-community/home-manager";
-        home-manager.inputs.nixpkgs.follows = "nixpkgs";
+        home-manager = {
+            url = "github:nix-community/home-manager";
+            inputs.nixpkgs.follows = "nixpkgs";
+        };
 
         nvf = {
             url = "github:NotAShelf/nvf";
@@ -16,6 +17,7 @@
             url = "gitlab:rycee/nur-expressions?dir=pkgs/firefox-addons";
             inputs.nixpkgs.follows = "nixpkgs";
         };
+
         zen-browser = {
             url = "github:0xc000022070/zen-browser-flake";
             inputs = {

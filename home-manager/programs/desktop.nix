@@ -1,26 +1,19 @@
-{
-    pkgs,
-    inputs,
-    ...
-}: let
-    # pkgs-unstable = import inputs.nixpkgs-unstable {
-    #     system = pkgs.stdenv.hostPlatform.system;
-    # };
+{pkgs, ...}: let
     wallpaper = ../wallpapers/earth.jpg;
 
-    catppuccinMocha = builtins.fetchurl {
+    catppuccinMochaRofi = builtins.fetchurl {
         url = "https://raw.githubusercontent.com/catppuccin/rofi/main/themes/catppuccin-mocha.rasi";
         sha256 = "0ikn0yc2b9cyzk4xga8mcq1j7xk2idik4wzpsibrphy8qr2pla4b";
     };
-    catppuccinDefault = builtins.fetchurl {
+    catppuccinDefaultRofi = builtins.fetchurl {
         url = "https://raw.githubusercontent.com/catppuccin/rofi/main/catppuccin-default.rasi";
         sha256 = "1f3r6yarrykj8cxvi5hblzlr5n8zbncifnxps9xl5gl32w6ysq5z";
     };
-    catppuccinTheme = pkgs.writeTextFile {
+    rofiCatppuccinTheme = pkgs.writeTextFile {
         name = "catppuccin-rofi-config";
         text = ''
-            @import "${catppuccinMocha}"
-            @import "${catppuccinDefault}"
+            @import "${catppuccinMochaRofi}"
+            @import "${catppuccinDefaultRofi}"
         '';
     };
 in {
@@ -39,6 +32,7 @@ in {
     services.hyprpaper = {
         enable = true;
         settings = {
+            splash = false;
             preload = [
                 "${wallpaper}"
             ];
@@ -54,7 +48,7 @@ in {
     wayland.windowManager.hyprland = {
         enable = true;
         xwayland.enable = true;
-        systemd.enable = false;
+        systemd.enable = true;
         package = null;
         portalPackage = null;
         settings = {
@@ -171,7 +165,6 @@ in {
     programs = {
         ashell = {
             enable = true;
-            # package = pkgs-unstable.ashell;
             settings = {
                 modules = {
                     left = ["WindowTitle" "Workspaces"];
@@ -223,7 +216,7 @@ in {
         rofi = {
             enable = true;
             terminal = "${pkgs.ghostty}/bin/ghostty";
-            theme = "${catppuccinTheme}";
+            theme = "${rofiCatppuccinTheme}";
             extraConfig = {
                 modi = "drun,run,calc,combi";
                 combi-modes = "drun,run,calc";

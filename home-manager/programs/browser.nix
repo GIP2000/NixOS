@@ -1,11 +1,19 @@
-{inputs, ...}: {
+{
+    inputs,
+    config,
+    ...
+}: {
     imports = [
         inputs.zen-browser.homeModules.default
     ];
 
     programs = {
         # zen doesn't have a DRM yet so this is so I can watch netflix
-        firefox.enable = true;
+        firefox = {
+            enable = true;
+            configPath = "${config.xdg.configHome}/mozilla/firefox";
+        };
+
         zen-browser = {
             enable = true;
             profiles.default = let
