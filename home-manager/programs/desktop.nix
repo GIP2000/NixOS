@@ -136,6 +136,25 @@ in {
                 mod = "SUPER";
                 wmod = "ALT";
 
+                workspaces = [
+                    "1"
+                    "2"
+                    "3"
+                    "4"
+                    "5"
+                    "6"
+                    "7"
+                    "8"
+                    "9"
+                    "a"
+                    "s"
+                    "d"
+                    "r"
+                ];
+
+                focus-workspace = lib.imap (i: key: let wk = toString i; in {_args = ["${wmod} + ${key}" ("${wk}" |> workspace |> focus)];}) workspaces;
+                move-workspace = lib.imap (i: key: let wk = toString i; in {_args = ["${wmod} + SHIFT + ${key}" ("${wk}" |> workspace |> move)];}) workspaces;
+
                 # helper functions
                 dsp = rest-str: (lib.generators.mkLuaInline "hl.dsp.${rest-str}");
                 exec = cmd: dsp "exec_cmd(\"${cmd}\")";
@@ -149,83 +168,55 @@ in {
                     temp-str = builtins.substring 0 (str-len - 1) rest-str;
                     final-str = "${temp-str}, follow = true}";
                 in (dsp "window.move(${final-str})");
-            in [
-                {_args = ["${mod} + Q" (dsp "window.close()") {locked = true;}];}
-                {_args = ["${mod} + T" (exec "${pkgs.ghostty}/bin/ghostty")];}
-                {_args = ["${mod} + B" (exec "zen-beta")];} # I have this downloaded with a flake its too annoying to grab it from inputs
-                {_args = ["${mod} + S" (exec "${pkgs.hyprshot}/bin/hyprshot -m region --clipboard-only")];}
-                {_args = ["${mod} + Space" (exec "${pkgs.rofi}/bin/rofi -show combi")];}
+            in
+                focus-workspace
+                ++ move-workspace
+                ++ [
+                    # Execution
+                    {_args = ["${mod} + Q" (dsp "window.close()") {locked = true;}];}
+                    {_args = ["${mod} + T" (exec "${pkgs.ghostty}/bin/ghostty")];}
+                    {_args = ["${mod} + B" (exec "zen-beta")];} # I have this downloaded with a flake its too annoying to grab it from inputs
+                    {_args = ["${mod} + S" (exec "${pkgs.hyprshot}/bin/hyprshot -m region --clipboard-only")];}
+                    {_args = ["${mod} + Space" (exec "${pkgs.rofi}/bin/rofi -show combi")];}
+                    {_args = ["XF86AudioRaiseVolume" (exec "wpctl set-volume @DEFAULT_SINK@ 5%+")];}
+                    {_args = ["XF86AudioLowerVolume" (exec "wpctl set-volume @DEFAULT_SINK@ 5%-")];}
+                    {_args = ["XF86AudioMute" (exec "wpctl set-mute @DEFAULT_SINK@ toggle")];}
+                    {_args = ["XF86AudioPlay" (exec "playerctl play-pause")];}
+                    {_args = ["XF86AudioNext" (exec "playerctl next")];}
+                    {_args = ["XF86AudioPrev" (exec "playerctl previous")];}
 
-                #Focus
-                {_args = ["${wmod} + j" ("d" |> dir |> focus)];}
-                {_args = ["${wmod} + k" ("u" |> dir |> focus)];}
-                {_args = ["${wmod} + h" ("l" |> dir |> focus)];}
-                {_args = ["${wmod} + l" ("r" |> dir |> focus)];}
+                    # Navigation
+                    {_args = ["${wmod} + j" ("d" |> dir |> focus)];}
+                    {_args = ["${wmod} + k" ("u" |> dir |> focus)];}
+                    {_args = ["${wmod} + h" ("l" |> dir |> focus)];}
+                    {_args = ["${wmod} + l" ("r" |> dir |> focus)];}
 
-                #Move
-                {_args = ["${wmod} + SHIFT + j" ("d" |> dir |> move)];}
-                {_args = ["${wmod} + SHIFT + k" ("u" |> dir |> move)];}
-                {_args = ["${wmod} + SHIFT + h" ("l" |> dir |> move)];}
-                {_args = ["${wmod} + SHIFT + l" ("r" |> dir |> move)];}
+                    {_args = ["${wmod} + SHIFT + j" ("d" |> dir |> move)];}
+                    {_args = ["${wmod} + SHIFT + k" ("u" |> dir |> move)];}
+                    {_args = ["${wmod} + SHIFT + h" ("l" |> dir |> move)];}
+                    {_args = ["${wmod} + SHIFT + l" ("r" |> dir |> move)];}
 
-                # Workspaces
-                {_args = ["${wmod} + 1" ("1" |> workspace |> focus)];}
-                {_args = ["${wmod} + 2" ("2" |> workspace |> focus)];}
-                {_args = ["${wmod} + 3" ("3" |> workspace |> focus)];}
-                {_args = ["${wmod} + 4" ("4" |> workspace |> focus)];}
-                {_args = ["${wmod} + 5" ("5" |> workspace |> focus)];}
-                {_args = ["${wmod} + 6" ("6" |> workspace |> focus)];}
-                {_args = ["${wmod} + 7" ("7" |> workspace |> focus)];}
-                {_args = ["${wmod} + 8" ("8" |> workspace |> focus)];}
-                {_args = ["${wmod} + 9" ("9" |> workspace |> focus)];}
-                {_args = ["${wmod} + a" ("10" |> workspace |> focus)];}
-                {_args = ["${wmod} + s" ("11" |> workspace |> focus)];}
-                {_args = ["${wmod} + d" ("12" |> workspace |> focus)];}
-                {_args = ["${wmod} + r" ("13" |> workspace |> focus)];}
-                {_args = ["${wmod} + f" (dsp "workspace.toggle_special(\"special\")")];}
+                    # Special
+                    {_args = ["${wmod} + f" (dsp "workspace.toggle_special(\"special\")")];}
+                    {_args = ["${wmod} + SHIFT + f" ("special:special" |> workspace |> move)];}
+                    {
+                        _args = [
+                            "${wmod} + T"
+                            (lib.generators.mkLuaInline
+                            ''
+                                function()
+                                    hl.dispatch(hl.dsp.window.float());
+                                    hl.dispatch(hl.dsp.window.resize({ x = 1600, y = 1080}));
+                                    hl.dispatch(hl.dsp.window.center());
+                                end
+                            '')
+                        ];
+                    }
 
-                # Workspaces move
-                {_args = ["${wmod} + SHIFT + 1" ("1" |> workspace |> move)];}
-                {_args = ["${wmod} + SHIFT + 2" ("2" |> workspace |> move)];}
-                {_args = ["${wmod} + SHIFT + 3" ("3" |> workspace |> move)];}
-                {_args = ["${wmod} + SHIFT + 4" ("4" |> workspace |> move)];}
-                {_args = ["${wmod} + SHIFT + 5" ("5" |> workspace |> move)];}
-                {_args = ["${wmod} + SHIFT + 6" ("6" |> workspace |> move)];}
-                {_args = ["${wmod} + SHIFT + 7" ("7" |> workspace |> move)];}
-                {_args = ["${wmod} + SHIFT + 8" ("8" |> workspace |> move)];}
-                {_args = ["${wmod} + SHIFT + 9" ("9" |> workspace |> move)];}
-                {_args = ["${wmod} + SHIFT + a" ("10" |> workspace |> move)];}
-                {_args = ["${wmod} + SHIFT + s" ("11" |> workspace |> move)];}
-                {_args = ["${wmod} + SHIFT + d" ("12" |> workspace |> move)];}
-                {_args = ["${wmod} + SHIFT + r" ("13" |> workspace |> move)];}
-                {_args = ["${wmod} + SHIFT + f" ("special:special" |> workspace |> move)];}
-
-                {
-                    _args = [
-                        "${wmod} + T"
-                        (lib.generators.mkLuaInline
-                        ''
-                            function()
-                                hl.dispatch(hl.dsp.window.float());
-                                hl.dispatch(hl.dsp.window.resize({ x = 1600, y = 1080}));
-                                hl.dispatch(hl.dsp.window.center());
-                            end
-                        '')
-                    ];
-                }
-
-                # Special Keys
-                {_args = ["XF86AudioRaiseVolume" (exec "wpctl set-volume @DEFAULT_SINK@ 5%+")];}
-                {_args = ["XF86AudioLowerVolume" (exec "wpctl set-volume @DEFAULT_SINK@ 5%-")];}
-                {_args = ["XF86AudioMute" (exec "wpctl set-mute @DEFAULT_SINK@ toggle")];}
-                {_args = ["XF86AudioPlay" (exec "playerctl play-pause")];}
-                {_args = ["XF86AudioNext" (exec "playerctl next")];}
-                {_args = ["XF86AudioPrev" (exec "playerctl previous")];}
-
-                # Mouse
-                {_args = ["${mod} + mouse:272" (dsp "window.drag()") {mouse = true;}];}
-                {_args = ["${mod} + mouse:273" (dsp "window.resize()") {mouse = true;}];}
-            ];
+                    # Mouse
+                    {_args = ["${mod} + mouse:272" (dsp "window.drag()") {mouse = true;}];}
+                    {_args = ["${mod} + mouse:273" (dsp "window.resize()") {mouse = true;}];}
+                ];
         };
     };
 
