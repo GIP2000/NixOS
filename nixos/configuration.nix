@@ -4,6 +4,7 @@
 {
     config,
     pkgs,
+    inputs,
     ...
 }: {
     imports = [
@@ -102,7 +103,13 @@
         backupFileExtension = "backup";
     };
 
-    nix.settings.experimental-features = ["nix-command" "flakes"];
+    nix.settings = {
+        substituters = ["https://hyprland.cachix.org"];
+        trusted-substituters = ["https://hyprland.cachix.org"];
+        trusted-public-keys = ["hyprland.cachix.org-1:a7pgxzMz7+chwVL3/pzj6jIBMioiJM7ypFP8PwtkuGc="];
+
+        experimental-features = ["nix-command" "flakes" "pipe-operators"];
+    };
 
     # Allow unfree packages
     nixpkgs.config.allowUnfree = true;
@@ -138,6 +145,9 @@
         enable = true;
         xwayland.enable = true;
         withUWSM = false;
+
+        package = inputs.hyprland.packages.${pkgs.stdenv.hostPlatform.system}.hyprland;
+        portalPackage = inputs.hyprland.packages.${pkgs.stdenv.hostPlatform.system}.xdg-desktop-portal-hyprland;
     };
 
     services.greetd = {

@@ -1,5 +1,14 @@
-{pkgs, ...}: let
+{
+    pkgs,
+    lib,
+    ...
+}: let
     wallpaper = ../wallpapers/earth.jpg;
+
+    catppuccinMochaWaybar = builtins.fetchurl {
+        url = "https://raw.githubusercontent.com/catppuccin/waybar/refs/heads/main/themes/mocha.css";
+        sha256 = "05yx7v4j9k1s1xanlak7yngqfwvxvylwxc2fhjcfha68rjbhbqx6";
+    };
 
     catppuccinMochaRofi = builtins.fetchurl {
         url = "https://raw.githubusercontent.com/catppuccin/rofi/main/themes/catppuccin-mocha.rasi";
@@ -51,118 +60,224 @@ in {
         systemd.enable = true;
         package = null;
         portalPackage = null;
+        configType = "lua";
+
         settings = {
-            misc = {
-                middle_click_paste = false;
+            config = {
+                misc = {
+                    middle_click_paste = false;
+                };
+                input = {
+                    repeat_delay = 300;
+                    repeat_rate = 30;
+                };
             };
-            input = {
-                repeat_delay = 300;
-                repeat_rate = 30;
-            };
-            exec-once = [
-                "ashell"
+            animation = [
+                {
+                    leaf = "workspaces";
+                    enabled = false;
+                }
             ];
-            animations = {
-                enabled = true;
-                animation = [
-                    "workspaces, 0, 0, deafult"
-                ];
-            };
-
-            workspace = [
-                "1, name: Scratch 1"
-                "2, name: Scratch 2"
-                "3, name: Scratch 3"
-                "4, name: Scratch 4"
-                "5, name: Scratch 5"
-                "6, name: Scratch 6"
-                "7, name: Scratch 7"
-                "8, name: Scratch 8"
-                "9, name: Scratch 9"
-                "10, name:Terminal"
-                "11, name:Web"
-                "12, name:Messaging"
-                "13, name:Music"
-
-                # smart gap
-                "w[tv1], gapsout:0, gapsin:0"
-                "w[f1], gapsout:0, gapsin:0"
+            on = [
+                {
+                    _args = [
+                        "hyprland.start"
+                        (lib.generators.mkLuaInline "function()\n  hl.exec_cmd(\"ashell\")\nend")
+                    ];
+                }
             ];
 
-            "$mod" = "SUPER";
-            "$wmod" = "ALT";
-            bind = [
-                "$mod, Q, killactive"
-                "$mod, T, exec, ghostty"
-                "$mod, B, exec, zen-beta"
-                "$mod, S, exec, hyprshot -m region --clipboard-only"
-                "$mod, Space, exec, rofi -show combi"
+            # Smart Gap
+            workspace_rule = [
+                {
+                    workspace = "w[tv1]";
+                    gaps_out = 0;
+                    gaps_in = 0;
+                }
+                {
+                    workspace = "f[1]";
+                    gaps_out = 0;
+                    gaps_in = 0;
+                }
+            ];
+            window_rule = [
+                {
+                    match = {
+                        float = false;
+                        workspace = "w[tv1]";
+                    };
+                    border_size = 0;
+                }
+                {
+                    match = {
+                        float = false;
+                        workspace = "w[tv1]";
+                    };
+                    rounding = 0;
+                }
+                {
+                    match = {
+                        float = false;
+                        workspace = "f[1]";
+                    };
+                    border_size = 0;
+                }
+                {
+                    match = {
+                        float = false;
+                        workspace = "f[1]";
+                    };
+                    rounding = 0;
+                }
+            ];
+
+            bind = let
+                # keybinds
+                mod = "SUPER";
+                wmod = "ALT";
+
+                # helper functions
+                dsp = rest-str: (lib.generators.mkLuaInline "hl.dsp.${rest-str}");
+                exec = cmd: dsp "exec_cmd(\"${cmd}\")";
+                dir = dir: "{direction = \"${dir}\"}";
+                workspace = workspace: "{workspace = \"${workspace}\"}";
+                focus = rest-str: dsp "focus(${rest-str})";
+
+                # this is a stupid hack
+                move = rest-str: let
+                    str-len = builtins.stringLength rest-str;
+                    temp-str = builtins.substring 0 (str-len - 1) rest-str;
+                    final-str = "${temp-str}, follow = true}";
+                in (dsp "window.move(${final-str})");
+            in [
+                {_args = ["${mod} + Q" (dsp "window.close()") {locked = true;}];}
+                {_args = ["${mod} + T" (exec "${pkgs.ghostty}/bin/ghostty")];}
+                {_args = ["${mod} + B" (exec "zen-beta")];} # I have this downloaded with a flake its too annoying to grab it from inputs
+                {_args = ["${mod} + S" (exec "${pkgs.hyprshot}/bin/hyprshot -m region --clipboard-only")];}
+                {_args = ["${mod} + Space" (exec "${pkgs.rofi}/bin/rofi -show combi")];}
 
                 #Focus
-                "$wmod, j, movefocus, d"
-                "$wmod, k, movefocus, u"
-                "$wmod, h, movefocus, l"
-                "$wmod, l, movefocus, r"
+                {_args = ["${wmod} + j" ("d" |> dir |> focus)];}
+                {_args = ["${wmod} + k" ("u" |> dir |> focus)];}
+                {_args = ["${wmod} + h" ("l" |> dir |> focus)];}
+                {_args = ["${wmod} + l" ("r" |> dir |> focus)];}
 
                 #Move
-                "$wmod SHIFT, j, movewindow, d"
-                "$wmod SHIFT, k, movewindow, u"
-                "$wmod SHIFT, h, movewindow, l"
-                "$wmod SHIFT, l, movewindow, r"
+                {_args = ["${wmod} + SHIFT + j" ("d" |> dir |> move)];}
+                {_args = ["${wmod} + SHIFT + k" ("u" |> dir |> move)];}
+                {_args = ["${wmod} + SHIFT + h" ("l" |> dir |> move)];}
+                {_args = ["${wmod} + SHIFT + l" ("r" |> dir |> move)];}
 
                 # Workspaces
-                "$wmod, 1, workspace,  1"
-                "$wmod, 2, workspace,  2"
-                "$wmod, 3, workspace,  3"
-                "$wmod, 4, workspace,  4"
-                "$wmod, 5, workspace,  5"
-                "$wmod, 6, workspace,  6"
-                "$wmod, 7, workspace,  7"
-                "$wmod, 8, workspace,  8"
-                "$wmod, 9, workspace,  9"
-                "$wmod, a, workspace, 10"
-                "$wmod, s, workspace, 11"
-                "$wmod, d, workspace, 12"
-                "$wmod, r, workspace, 13"
-                "$wmod, f, togglespecialworkspace"
+                {_args = ["${wmod} + 1" ("1" |> workspace |> focus)];}
+                {_args = ["${wmod} + 2" ("2" |> workspace |> focus)];}
+                {_args = ["${wmod} + 3" ("3" |> workspace |> focus)];}
+                {_args = ["${wmod} + 4" ("4" |> workspace |> focus)];}
+                {_args = ["${wmod} + 5" ("5" |> workspace |> focus)];}
+                {_args = ["${wmod} + 6" ("6" |> workspace |> focus)];}
+                {_args = ["${wmod} + 7" ("7" |> workspace |> focus)];}
+                {_args = ["${wmod} + 8" ("8" |> workspace |> focus)];}
+                {_args = ["${wmod} + 9" ("9" |> workspace |> focus)];}
+                {_args = ["${wmod} + a" ("10" |> workspace |> focus)];}
+                {_args = ["${wmod} + s" ("11" |> workspace |> focus)];}
+                {_args = ["${wmod} + d" ("12" |> workspace |> focus)];}
+                {_args = ["${wmod} + r" ("13" |> workspace |> focus)];}
+                {_args = ["${wmod} + f" (dsp "workspace.toggle_special(\"special\")")];}
 
                 # Workspaces move
-                "$wmod SHIFT, 1, movetoworkspace,  1"
-                "$wmod SHIFT, 2, movetoworkspace,  2"
-                "$wmod SHIFT, 3, movetoworkspace,  3"
-                "$wmod SHIFT, 4, movetoworkspace,  4"
-                "$wmod SHIFT, 5, movetoworkspace,  5"
-                "$wmod SHIFT, 6, movetoworkspace,  6"
-                "$wmod SHIFT, 7, movetoworkspace,  7"
-                "$wmod SHIFT, 8, movetoworkspace,  8"
-                "$wmod SHIFT, 9, movetoworkspace,  9"
-                "$wmod SHIFT, a, movetoworkspace, 10"
-                "$wmod SHIFT, s, movetoworkspace, 11"
-                "$wmod SHIFT, d, movetoworkspace, 12"
-                "$wmod SHIFT, r, movetoworkspace, 13"
-                "$wmod SHIFT, f, movetoworkspace, special"
+                {_args = ["${wmod} + SHIFT + 1" ("1" |> workspace |> move)];}
+                {_args = ["${wmod} + SHIFT + 2" ("2" |> workspace |> move)];}
+                {_args = ["${wmod} + SHIFT + 3" ("3" |> workspace |> move)];}
+                {_args = ["${wmod} + SHIFT + 4" ("4" |> workspace |> move)];}
+                {_args = ["${wmod} + SHIFT + 5" ("5" |> workspace |> move)];}
+                {_args = ["${wmod} + SHIFT + 6" ("6" |> workspace |> move)];}
+                {_args = ["${wmod} + SHIFT + 7" ("7" |> workspace |> move)];}
+                {_args = ["${wmod} + SHIFT + 8" ("8" |> workspace |> move)];}
+                {_args = ["${wmod} + SHIFT + 9" ("9" |> workspace |> move)];}
+                {_args = ["${wmod} + SHIFT + a" ("10" |> workspace |> move)];}
+                {_args = ["${wmod} + SHIFT + s" ("11" |> workspace |> move)];}
+                {_args = ["${wmod} + SHIFT + d" ("12" |> workspace |> move)];}
+                {_args = ["${wmod} + SHIFT + r" ("13" |> workspace |> move)];}
+                {_args = ["${wmod} + SHIFT + f" ("special:special" |> workspace |> move)];}
 
-                "$wmod, T, togglefloating"
-                "$wmod, T, resizeactive, exact 1600 1080"
-                "$wmod, T, centerwindow"
+                {
+                    _args = [
+                        "${wmod} + T"
+                        (lib.generators.mkLuaInline
+                        ''
+                            function()
+                                hl.dispatch(hl.dsp.window.float());
+                                hl.dispatch(hl.dsp.window.resize({ x = 1600, y = 1080}));
+                                hl.dispatch(hl.dsp.window.center());
+                            end
+                        '')
+                    ];
+                }
 
                 # Special Keys
-                ", XF86AudioRaiseVolume, exec, wpctl set-volume @DEFAULT_SINK@ 5%+"
-                ", XF86AudioLowerVolume, exec, wpctl set-volume @DEFAULT_SINK@ 5%-"
-                ", XF86AudioMute, exec, wpctl set-mute @DEFAULT_SINK@ toggle"
+                {_args = ["XF86AudioRaiseVolume" (exec "wpctl set-volume @DEFAULT_SINK@ 5%+")];}
+                {_args = ["XF86AudioLowerVolume" (exec "wpctl set-volume @DEFAULT_SINK@ 5%-")];}
+                {_args = ["XF86AudioMute" (exec "wpctl set-mute @DEFAULT_SINK@ toggle")];}
+                {_args = ["XF86AudioPlay" (exec "playerctl play-pause")];}
+                {_args = ["XF86AudioNext" (exec "playerctl next")];}
+                {_args = ["XF86AudioPrev" (exec "playerctl previous")];}
 
-                ", XF86AudioPlay, exec, playerctl play-pause"
-                ", XF86AudioNext, exec, playerctl next"
-                ", XF86AudioPrev, exec, playerctl previous"
-            ];
-            bindm = [
-                "$mod, mouse:272, movewindow"
-                "$mod, mouse:273, resizewindow"
+                # Mouse
+                {_args = ["${mod} + mouse:272" (dsp "window.drag()") {mouse = true;}];}
+                {_args = ["${mod} + mouse:273" (dsp "window.resize()") {mouse = true;}];}
             ];
         };
     };
 
     programs = {
+        waybar = {
+            enable = true;
+            settings = {
+                mainBar = {
+                    layer = "top";
+                    position = "top";
+                    height = 40;
+                    spacing = 0;
+                    exclusive = true;
+
+                    modules-left = ["hyprland/window" "hyprland/workspaces"];
+                    modules-center = ["clock"];
+                    modules-right = [];
+
+                    "hyprland/window" = {
+                        format = "{title}";
+                        icon = true;
+                        max-length = 50;
+                    };
+
+                    "hyprland/workspaces" = {
+                        format = "{id}";
+                        on-click = "activate";
+                        on-scroll-up = "hyprctl dispatch workspace e+1";
+                        on-scroll-down = "hyprctl dispatch workspace e-1";
+                    };
+
+                    clock = {
+                        format = "{:%a %e %b | %I:%M %p}";
+                        tooltip = false;
+                    };
+                };
+            };
+            style = ''
+                @import "${catppuccinMochaWaybar}";
+
+                . {
+                    color: @text;
+                }
+
+                window#waybar {
+                  background-color: shade(@base, 0.9);
+                  border: 2px solid alpha(@crust, 0.3);
+                }
+
+            '';
+        };
+
         ashell = {
             enable = true;
             settings = {
