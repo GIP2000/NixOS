@@ -5,11 +5,6 @@
 }: let
     wallpaper = ../wallpapers/earth.jpg;
 
-    catppuccinMochaWaybar = builtins.fetchurl {
-        url = "https://raw.githubusercontent.com/catppuccin/waybar/refs/heads/main/themes/mocha.css";
-        sha256 = "05yx7v4j9k1s1xanlak7yngqfwvxvylwxc2fhjcfha68rjbhbqx6";
-    };
-
     catppuccinMochaRofi = builtins.fetchurl {
         url = "https://raw.githubusercontent.com/catppuccin/rofi/main/themes/catppuccin-mocha.rasi";
         sha256 = "0ikn0yc2b9cyzk4xga8mcq1j7xk2idik4wzpsibrphy8qr2pla4b";
@@ -36,6 +31,56 @@ in {
 
     services.kdeconnect = {
         enable = true;
+    };
+
+    services.wayle = {
+        enable = true;
+        autoInstallDependencies = true;
+        settings = {
+            bar = {
+                layout = [
+                    {
+                        monitor = "*";
+                        left = ["window-title" "hyprland-workspaces"];
+                        center = ["weather" "clock"];
+                        right = ["media" "bluetooth" "network" "volume" "power"];
+                    }
+                ];
+                location = "top";
+                rounding = "sm";
+                scale = 1;
+            };
+            modules = {
+                window-title = {
+                    label-max-length = 50;
+                };
+                hyprland-workspaces = {};
+                weather = {
+                    units = "imperial";
+                    location = "New York";
+                };
+                clock = {
+                    format = "%a %e %b | %I:%M %p";
+                    icon-show = false;
+                };
+                media = {
+                    label-max-length = 20;
+                };
+                bluetooth = {
+                    label-show = false;
+                };
+                network = {
+                    label-show = false;
+                };
+                volume = {
+                    label-show = false;
+                };
+                power = {
+                    left-click = "shutown -h now";
+                    right-click = "hyprctl dispatch 'hl.dsp.exit()'";
+                };
+            };
+        };
     };
 
     services.hyprpaper = {
@@ -76,14 +121,6 @@ in {
                 {
                     leaf = "workspaces";
                     enabled = false;
-                }
-            ];
-            on = [
-                {
-                    _args = [
-                        "hyprland.start"
-                        (lib.generators.mkLuaInline "function()\n  hl.exec_cmd(\"ashell\")\nend")
-                    ];
                 }
             ];
 
@@ -221,104 +258,7 @@ in {
     };
 
     programs = {
-        waybar = {
-            enable = true;
-            settings = {
-                mainBar = {
-                    layer = "top";
-                    position = "top";
-                    height = 40;
-                    spacing = 0;
-                    exclusive = true;
-
-                    modules-left = ["hyprland/window" "hyprland/workspaces"];
-                    modules-center = ["clock"];
-                    modules-right = [];
-
-                    "hyprland/window" = {
-                        format = "{title}";
-                        icon = true;
-                        max-length = 50;
-                    };
-
-                    "hyprland/workspaces" = {
-                        format = "{id}";
-                        on-click = "activate";
-                        on-scroll-up = "hyprctl dispatch workspace e+1";
-                        on-scroll-down = "hyprctl dispatch workspace e-1";
-                    };
-
-                    clock = {
-                        format = "{:%a %e %b | %I:%M %p}";
-                        tooltip = false;
-                    };
-                };
-            };
-            style = ''
-                @import "${catppuccinMochaWaybar}";
-
-                . {
-                    color: @text;
-                }
-
-                window#waybar {
-                  background-color: shade(@base, 0.9);
-                  border: 2px solid alpha(@crust, 0.3);
-                }
-
-            '';
-        };
-
-        ashell = {
-            enable = true;
-            settings = {
-                modules = {
-                    left = ["WindowTitle" "Workspaces"];
-                    center = ["Tempo"];
-                    right = ["SystemInfo" "MediaPlayer" ["Privacy" "Settings"]];
-                };
-                window_title = {
-                    # mode = "Class";
-                    truncate_title_after_length = 50;
-                };
-                tempo = {
-                    clock_format = "%a %e %b | %I:%M %p";
-                    weather_location = "Current";
-                    weather_indicator = "IconAndTemperature";
-                };
-                media_player = {
-                    max_title_length = 20;
-                };
-                settings = {
-                    bluetooth_more_cmd = "blueman-manager";
-                };
-
-                appearance = {
-                    primary_color = "#7aa2f7";
-                    success_color = "#9ece6a";
-                    text_color = "#a9b1d6";
-
-                    workspace_colors = ["#7aa2f7" "#9ece6a"];
-
-                    danger_color = {
-                        base = "#f7768e";
-                        weak = "#e0af68";
-                    };
-
-                    background_color = {
-                        base = "#1a1b26";
-                        weak = "#24273a";
-                        strong = "#414868";
-                    };
-
-                    secondary_color = {
-                        base = "#0c0d14";
-                    };
-                };
-            };
-        };
         hyprshot.enable = true;
-
         rofi = {
             enable = true;
             terminal = "${pkgs.ghostty}/bin/ghostty";
