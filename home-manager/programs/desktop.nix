@@ -177,7 +177,7 @@ in {
                     {_args = ["${mod} + T" (exec "${pkgs.ghostty}/bin/ghostty")];}
                     {_args = ["${mod} + B" (exec "zen-beta")];} # I have this downloaded with a flake its too annoying to grab it from inputs
                     {_args = ["${mod} + S" (exec "${pkgs.hyprshot}/bin/hyprshot -m region --clipboard-only")];}
-                    {_args = ["${mod} + Space" (exec "${pkgs.rofi}/bin/rofi -show combi")];}
+                    {_args = ["${mod} + Space" (exec "rofi -show combi")];}
                     {_args = ["XF86AudioRaiseVolume" (exec "wpctl set-volume @DEFAULT_SINK@ 5%+")];}
                     {_args = ["XF86AudioLowerVolume" (exec "wpctl set-volume @DEFAULT_SINK@ 5%-")];}
                     {_args = ["XF86AudioMute" (exec "wpctl set-mute @DEFAULT_SINK@ toggle")];}
