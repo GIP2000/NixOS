@@ -189,8 +189,17 @@ in {
                     "r"
                 ];
 
-                focus-workspace = lib.imap (i: key: let wk = toString i; in {_args = ["${wmod} + ${key}" ("${wk}" |> workspace |> focus)];}) workspaces;
-                move-workspace = lib.imap (i: key: let wk = toString i; in {_args = ["${wmod} + SHIFT + ${key}" ("${wk}" |> workspace |> move)];}) workspaces;
+                workspace-binds = lib.flatten (lib.imap (i: key: let
+                    wk = toString i;
+                in [
+                    {
+                        _args = ["${wmod} + ${key}" ("${wk}" |> workspace |> focus)];
+                    }
+                    {
+                        _args = ["${wmod} + SHIFT + ${key}" ("${wk}" |> workspace |> move)];
+                    }
+                ])
+                workspaces);
 
                 # helper functions
                 dsp = rest-str: (lib.generators.mkLuaInline "hl.dsp.${rest-str}");
@@ -206,8 +215,7 @@ in {
                     final-str = "${temp-str}, follow = true}";
                 in (dsp "window.move(${final-str})");
             in
-                focus-workspace
-                ++ move-workspace
+                workspace-binds
                 ++ [
                     # Execution
                     {_args = ["${mod} + Q" (dsp "window.close()") {locked = true;}];}
