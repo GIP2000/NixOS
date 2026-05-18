@@ -76,7 +76,7 @@ in {
                     label-show = false;
                 };
                 power = {
-                    left-click = "shutown -h now";
+                    left-click = "shutdown -h now";
                     right-click = "hyprctl dispatch 'hl.dsp.exit()'";
                 };
             };
@@ -120,6 +120,10 @@ in {
             animation = [
                 {
                     leaf = "workspaces";
+                    enabled = false;
+                }
+                {
+                    leaf = "windowsIn";
                     enabled = false;
                 }
             ];
@@ -189,17 +193,19 @@ in {
                     "r"
                 ];
 
-                workspace-binds = lib.flatten (lib.imap (i: key: let
-                    wk = toString i;
-                in [
-                    {
-                        _args = ["${wmod} + ${key}" ("${wk}" |> workspace |> focus)];
-                    }
-                    {
-                        _args = ["${wmod} + SHIFT + ${key}" ("${wk}" |> workspace |> move)];
-                    }
-                ])
-                workspaces);
+                workspace-binds =
+                    workspaces
+                    |> lib.imap (i: key: let
+                        wk = toString i;
+                    in [
+                        {
+                            _args = ["${wmod} + ${key}" (workspace "${wk}" |> focus)];
+                        }
+                        {
+                            _args = ["${wmod} + SHIFT + ${key}" (workspace "${wk}" |> move)];
+                        }
+                    ])
+                    |> lib.flatten;
 
                 # helper functions
                 dsp = rest-str: (lib.generators.mkLuaInline "hl.dsp.${rest-str}");
@@ -207,7 +213,6 @@ in {
                 dir = dir: "{direction = \"${dir}\"}";
                 workspace = workspace: "{workspace = \"${workspace}\"}";
                 focus = rest-str: dsp "focus(${rest-str})";
-
                 # this is a stupid hack
                 move = rest-str: let
                     str-len = builtins.stringLength rest-str;
@@ -231,19 +236,19 @@ in {
                     {_args = ["XF86AudioPrev" (exec "playerctl previous")];}
 
                     # Navigation
-                    {_args = ["${wmod} + j" ("d" |> dir |> focus)];}
-                    {_args = ["${wmod} + k" ("u" |> dir |> focus)];}
-                    {_args = ["${wmod} + h" ("l" |> dir |> focus)];}
-                    {_args = ["${wmod} + l" ("r" |> dir |> focus)];}
+                    {_args = ["${wmod} + j" (dir "d" |> focus)];}
+                    {_args = ["${wmod} + k" (dir "u" |> focus)];}
+                    {_args = ["${wmod} + h" (dir "l" |> focus)];}
+                    {_args = ["${wmod} + l" (dir "r" |> focus)];}
 
-                    {_args = ["${wmod} + SHIFT + j" ("d" |> dir |> move)];}
-                    {_args = ["${wmod} + SHIFT + k" ("u" |> dir |> move)];}
-                    {_args = ["${wmod} + SHIFT + h" ("l" |> dir |> move)];}
-                    {_args = ["${wmod} + SHIFT + l" ("r" |> dir |> move)];}
+                    {_args = ["${wmod} + SHIFT + j" (dir "d" |> move)];}
+                    {_args = ["${wmod} + SHIFT + k" (dir "u" |> move)];}
+                    {_args = ["${wmod} + SHIFT + h" (dir "l" |> move)];}
+                    {_args = ["${wmod} + SHIFT + l" (dir "r" |> move)];}
 
                     # Special
                     {_args = ["${wmod} + f" (dsp "workspace.toggle_special(\"special\")")];}
-                    {_args = ["${wmod} + SHIFT + f" ("special:special" |> workspace |> move)];}
+                    {_args = ["${wmod} + SHIFT + f" (workspace "special:special" |> move)];}
                     {
                         _args = [
                             "${wmod} + T"
@@ -262,6 +267,51 @@ in {
                     {_args = ["${mod} + mouse:272" (dsp "window.drag()") {mouse = true;}];}
                     {_args = ["${mod} + mouse:273" (dsp "window.resize()") {mouse = true;}];}
                 ];
+
+            on = [
+                {
+                    _args = [
+                        "workspace.active"
+                        (let
+                            persitant-workspaces =
+                                [
+                                    {
+                                        ws = "10";
+                                        pkgs-path = "${pkgs.ghostty}/bin/ghostty";
+                                    }
+
+                                    {
+                                        ws = "11";
+                                        pkgs-path = "zen-beta";
+                                    }
+                                    {
+                                        ws = "13";
+                                        pkgs-path = "${pkgs.spotify}/bin/spotify";
+                                    }
+                                ]
+                                |> map (val: ''
+                                    if ws == "${val.ws}" then
+                                        hl.exec_cmd("${val.pkgs-path}");
+                                    end
+                                '')
+                                |> builtins.concatStringsSep "";
+                        in
+                            lib.generators.mkLuaInline ''
+                                function (ws_obj)
+
+                                    local ws = ws_obj.name;
+                                    local windows = hl.get_workspace_windows(ws);
+
+                                    if #windows > 0 then
+                                        return ;
+                                    end
+
+                                    ${persitant-workspaces}
+                                end
+                            '')
+                    ];
+                }
+            ];
         };
     };
 

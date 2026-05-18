@@ -84,7 +84,7 @@
                     };
                 };
 
-                ts = {
+                typescript = {
                     enable = true;
                     format = {
                         enable = true;

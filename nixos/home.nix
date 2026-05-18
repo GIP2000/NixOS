@@ -53,16 +53,20 @@
         on = [
             {
                 _args = [
-                    "hyprland.start"
+                    "monitor.added"
                     (lib.generators.mkLuaInline ''
-                        function()
+                        function(monitor)
+                            if not monitor.name == "DP-3" then
+                                return;
+                            end
+
                             hl.dispatch(hl.dsp.workspace.move({
-                                workspace = 10,
-                                monitor = DP-3,
+                                workspace = "10",
+                                monitor = "DP-3",
                             }));
 
                             hl.dispatch(hl.dsp.focus({
-                                workspace = 10,
+                                workspace = "10",
                                 on_current_monitor = false,
                             }));
                         end
