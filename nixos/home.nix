@@ -52,9 +52,11 @@
 
         on = [
             {
-                _args = [
+                _args = let
+                    mkLuaInline = lib.generators.mkLuaInline;
+                in [
                     "monitor.added"
-                    (lib.generators.mkLuaInline ''
+                    (mkLuaInline ''
                         function(monitor)
                             if not monitor.name == "DP-3" then
                                 return;

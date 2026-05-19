@@ -54,7 +54,10 @@ in {
                 window-title = {
                     label-max-length = 50;
                 };
-                hyprland-workspaces = {};
+                hyprland-workspaces = {
+                    app-icons-show = true;
+                    display-mode = "none";
+                };
                 weather = {
                     units = "imperial";
                     location = "New York";
@@ -107,7 +110,9 @@ in {
         portalPackage = null;
         configType = "lua";
 
-        settings = {
+        settings = let
+            mkLuaInline = lib.generators.mkLuaInline;
+        in {
             config = {
                 misc = {
                     middle_click_paste = false;
@@ -208,22 +213,21 @@ in {
                     |> lib.flatten;
 
                 # helper functions
-                dsp = rest-str: (lib.generators.mkLuaInline "hl.dsp.${rest-str}");
-                exec = cmd: dsp "exec_cmd(\"${cmd}\")";
+                exec = cmd: mkLuaInline ''hl.dsp.exec_cmd("${cmd}")'';
                 dir = dir: "{direction = \"${dir}\"}";
                 workspace = workspace: "{workspace = \"${workspace}\"}";
-                focus = rest-str: dsp "focus(${rest-str})";
+                focus = rest-str: mkLuaInline ''hl.dsp.focus(${rest-str})'';
                 # this is a stupid hack
                 move = rest-str: let
                     str-len = builtins.stringLength rest-str;
                     temp-str = builtins.substring 0 (str-len - 1) rest-str;
                     final-str = "${temp-str}, follow = true}";
-                in (dsp "window.move(${final-str})");
+                in (mkLuaInline ''hl.dsp.window.move(${final-str})'');
             in
                 workspace-binds
                 ++ [
                     # Execution
-                    {_args = ["${mod} + Q" (dsp "window.close()") {locked = true;}];}
+                    {_args = ["${mod} + Q" (mkLuaInline ''hl.dsp.window.close()'') {locked = true;}];}
                     {_args = ["${mod} + T" (exec "${pkgs.ghostty}/bin/ghostty")];}
                     {_args = ["${mod} + B" (exec "zen-beta")];} # I have this downloaded with a flake its too annoying to grab it from inputs
                     {_args = ["${mod} + S" (exec "${pkgs.hyprshot}/bin/hyprshot -m region --clipboard-only")];}
@@ -247,13 +251,12 @@ in {
                     {_args = ["${wmod} + SHIFT + l" (dir "r" |> move)];}
 
                     # Special
-                    {_args = ["${wmod} + f" (dsp "workspace.toggle_special(\"special\")")];}
+                    {_args = ["${wmod} + f" (mkLuaInline ''hl.dsp.workspace.toggle_special("special")'')];}
                     {_args = ["${wmod} + SHIFT + f" (workspace "special:special" |> move)];}
                     {
                         _args = [
                             "${wmod} + T"
-                            (lib.generators.mkLuaInline
-                            ''
+                            (mkLuaInline ''
                                 function()
                                     hl.dispatch(hl.dsp.window.float());
                                     hl.dispatch(hl.dsp.window.resize({ x = 1600, y = 1080}));
@@ -264,8 +267,8 @@ in {
                     }
 
                     # Mouse
-                    {_args = ["${mod} + mouse:272" (dsp "window.drag()") {mouse = true;}];}
-                    {_args = ["${mod} + mouse:273" (dsp "window.resize()") {mouse = true;}];}
+                    {_args = ["${mod} + mouse:272" (mkLuaInline ''hl.dsp.window.drag()'') {mouse = true;}];}
+                    {_args = ["${mod} + mouse:273" (mkLuaInline ''hl.dsp.window.resize()'') {mouse = true;}];}
                 ];
 
             on = [
@@ -273,32 +276,24 @@ in {
                     _args = [
                         "workspace.active"
                         (let
-                            persitant-workspaces =
-                                [
-                                    {
-                                        ws = "10";
-                                        pkgs-path = "${pkgs.ghostty}/bin/ghostty";
-                                    }
+                            persitant-workspaces = [
+                                {
+                                    ws = "10";
+                                    pkgs-path = "${pkgs.ghostty}/bin/ghostty";
+                                }
 
-                                    {
-                                        ws = "11";
-                                        pkgs-path = "zen-beta";
-                                    }
-                                    {
-                                        ws = "13";
-                                        pkgs-path = "${pkgs.spotify}/bin/spotify";
-                                    }
-                                ]
-                                |> map (val: ''
-                                    if ws == "${val.ws}" then
-                                        hl.exec_cmd("${val.pkgs-path}");
-                                    end
-                                '')
-                                |> builtins.concatStringsSep "";
+                                {
+                                    ws = "11";
+                                    pkgs-path = "zen-beta";
+                                }
+                                {
+                                    ws = "13";
+                                    pkgs-path = "${pkgs.spotify}/bin/spotify";
+                                }
+                            ];
                         in
-                            lib.generators.mkLuaInline ''
+                            mkLuaInline ''
                                 function (ws_obj)
-
                                     local ws = ws_obj.name;
                                     local windows = hl.get_workspace_windows(ws);
 
@@ -306,7 +301,17 @@ in {
                                         return ;
                                     end
 
-                                    ${persitant-workspaces}
+                                ${
+                                    persitant-workspaces
+                                    |> map (val:
+                                    #lua
+                                    ''
+                                        if ws == "${val.ws}" then
+                                            hl.exec_cmd("${val.pkgs-path}");
+                                        end
+                                    '')
+                                    |> builtins.concatStringsSep ""
+                                }
                                 end
                             '')
                     ];

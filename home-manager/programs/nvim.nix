@@ -102,6 +102,7 @@
                     enable = true;
                     lsp.servers = ["zls"];
                 };
+                lua.enable = true;
             };
 
             git.vim-fugitive.enable = true;
