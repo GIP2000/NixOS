@@ -29,6 +29,12 @@ in {
         size = 24;
     };
 
+    home.packages = with pkgs; [
+        wf-recorder
+        grim
+        slurp
+    ];
+
     services.kdeconnect = {
         enable = true;
     };
@@ -56,7 +62,6 @@ in {
                 };
                 hyprland-workspaces = {
                     app-icons-show = true;
-                    display-mode = "none";
                 };
                 weather = {
                     units = "imperial";
@@ -182,7 +187,7 @@ in {
                 mod = "SUPER";
                 wmod = "ALT";
 
-                workspaces = [
+                workspaces-with-keybinds = [
                     "1"
                     "2"
                     "3"
@@ -199,7 +204,7 @@ in {
                 ];
 
                 workspace-binds =
-                    workspaces
+                    workspaces-with-keybinds
                     |> lib.imap (i: key: let
                         wk = toString i;
                     in [
@@ -217,12 +222,22 @@ in {
                 dir = dir: "{direction = \"${dir}\"}";
                 workspace = workspace: "{workspace = \"${workspace}\"}";
                 focus = rest-str: mkLuaInline ''hl.dsp.focus(${rest-str})'';
-                # this is a stupid hack
                 move = rest-str: let
+                    # this is a stupid hack
                     str-len = builtins.stringLength rest-str;
                     temp-str = builtins.substring 0 (str-len - 1) rest-str;
                     final-str = "${temp-str}, follow = true}";
                 in (mkLuaInline ''hl.dsp.window.move(${final-str})'');
+                uuid =
+                    #lua
+                    ''
+                        local function uuid()
+                          local handle = io.popen("uuidgen")
+                          local result = handle:read("*a"):gsub("%s+", "")
+                          handle:close()
+                          return result
+                        end
+                    '';
             in
                 workspace-binds
                 ++ [
@@ -230,14 +245,117 @@ in {
                     {_args = ["${mod} + Q" (mkLuaInline ''hl.dsp.window.close()'') {locked = true;}];}
                     {_args = ["${mod} + T" (exec "${pkgs.ghostty}/bin/ghostty")];}
                     {_args = ["${mod} + B" (exec "zen-beta")];} # I have this downloaded with a flake its too annoying to grab it from inputs
-                    {_args = ["${mod} + S" (exec "${pkgs.hyprshot}/bin/hyprshot -m region --clipboard-only")];}
                     {_args = ["${mod} + Space" (exec "rofi -show combi")];}
+
+                    # Media Controls
                     {_args = ["XF86AudioRaiseVolume" (exec "wpctl set-volume @DEFAULT_SINK@ 5%+")];}
                     {_args = ["XF86AudioLowerVolume" (exec "wpctl set-volume @DEFAULT_SINK@ 5%-")];}
                     {_args = ["XF86AudioMute" (exec "wpctl set-mute @DEFAULT_SINK@ toggle")];}
                     {_args = ["XF86AudioPlay" (exec "playerctl play-pause")];}
                     {_args = ["XF86AudioNext" (exec "playerctl next")];}
                     {_args = ["XF86AudioPrev" (exec "playerctl previous")];}
+
+                    #  Screenshots
+                    {
+                        _args = [
+                            "${mod} + S"
+                            (mkLuaInline ''
+                                function()
+                                    hl.dispatch(hl.dsp.exec_cmd("grim -g \"$(slurp -d)\" - | wl-copy"));
+                                    hl.notification.create({
+                                        text = "Screenshot Saved to Clipboard",
+                                        timeout = 5000,
+                                        icon = "ok"
+                                    })
+                                end
+                            '')
+                        ];
+                    }
+                    {
+                        _args = [
+                            "${mod} + SHIFT + S"
+                            (mkLuaInline ''
+                                function()
+                                    local monitor = hl.get_active_monitor();
+                                    hl.dispatch(hl.dsp.exec_cmd("grim -o " .. monitor.name .."- | wl-copy"));
+                                    hl.notification.create({
+                                        text = "Screenshot of screen " ..monitor.name .." Saved to Clipboard",
+                                        timeout = 5000,
+                                        icon = "ok"
+                                    })
+                                end
+                            '')
+                        ];
+                    }
+                    # Recordings
+                    {
+                        _args = [
+                            "${mod} + SHIFT + R"
+                            (mkLuaInline ''
+                                (function()
+                                    ${uuid}
+                                    local monitor = nil;
+
+                                    return function ()
+                                        os.execute("pkill -INT -f wf-recorder");
+                                        if tmp_path then
+                                            hl.dispatch(hl.dsp.exec_cmd("echo -n \"file:///" ..tmp_path .."\" | wl-copy --type text/uri-list"));
+                                            if monitor then
+                                                hl.notification.create({
+                                                    text = "Recording from "..monitor.name .."Saved to Clipboard & " ..tmp_path,
+                                                    timeout = 5000,
+                                                    icon = "ok"
+                                                });
+                                            else
+                                                hl.notification.create({
+                                                    text = "Recording Saved to Clipboard & " ..tmp_path,
+                                                    timeout = 5000,
+                                                    icon = "ok"
+                                                });
+                                            end
+                                            tmp_path = nil;
+                                            monitor = nil;
+                                        else
+                                            monitor = hl.get_active_monitor();
+                                            tmp_path = "/tmp/" ..uuid() .. ".mp4";
+                                            hl.dispatch(hl.dsp.exec_cmd("wf-recorder -o "..monitor.name  .." -f " ..tmp_path))
+                                            hl.notification.create({
+                                                text = "Recording "..monitor.name .."Started",
+                                                timeout = 5000,
+                                                icon = "ok"
+                                            });
+                                        end
+                                   end
+                                end)()
+                            '')
+                        ];
+                    }
+                    {
+                        _args = [
+                            "${mod} + R"
+                            (mkLuaInline ''
+                                (function()
+                                    ${uuid}
+                                    return function ()
+                                        os.execute("pkill -INT -f wf-recorder");
+                                        if tmp_path then
+                                            hl.dispatch(hl.dsp.exec_cmd("echo -n \"file:///" ..tmp_path .."\" | wl-copy --type text/uri-list"))
+                                            hl.notification.create({
+                                                text = "Recording Saved to Clipboard & " ..tmp_path,
+                                                timeout = 5000,
+                                                icon = "ok"
+                                            })
+                                            tmp_path = nil;
+                                        else
+                                            tmp_path = "/tmp/" ..uuid() .. ".mp4";
+                                            hl.dispatch(hl.dsp.exec_cmd("wf-recorder -g \"$(${pkgs.slurp}/bin/slurp)\" -f " ..tmp_path))
+                                            hl.notification.create({ text = "Recording Started", timeout = 5000, icon = "ok" })
+                                        end
+                                   end
+                                end)()
+                            '')
+                        ];
+                    }
 
                     # Navigation
                     {_args = ["${wmod} + j" (dir "d" |> focus)];}
@@ -251,11 +369,13 @@ in {
                     {_args = ["${wmod} + SHIFT + l" (dir "r" |> move)];}
 
                     # Special
-                    {_args = ["${wmod} + f" (mkLuaInline ''hl.dsp.workspace.toggle_special("special")'')];}
-                    {_args = ["${wmod} + SHIFT + f" (workspace "special:special" |> move)];}
+                    {_args = ["${wmod} + F" (mkLuaInline ''hl.dsp.workspace.toggle_special("special")'')];}
+                    {_args = ["${wmod} + SHIFT + F" (workspace "special:special" |> move)];}
+
+                    # Floating
                     {
                         _args = [
-                            "${wmod} + T"
+                            "${mod} + F"
                             (mkLuaInline ''
                                 function()
                                     hl.dispatch(hl.dsp.window.float());
@@ -273,6 +393,7 @@ in {
 
             on = [
                 {
+                    # This automatically opens a specific window whenever I go to a specific empty workspace
                     _args = [
                         "workspace.active"
                         (let
@@ -307,7 +428,16 @@ in {
                                     #lua
                                     ''
                                         if ws == "${val.ws}" then
-                                            hl.exec_cmd("${val.pkgs-path}");
+                                            hl.dispatch(
+                                                hl.dsp.exec_cmd(
+                                                    "${val.pkgs-path}",
+                                                    {
+                                                        workspace = ws,
+                                                        no_initial_focus = true,
+                                                        tag = "+auto-open"
+                                                    }
+                                                )
+                                            );
                                         end
                                     '')
                                     |> builtins.concatStringsSep ""
@@ -316,12 +446,41 @@ in {
                             '')
                     ];
                 }
+                {
+                    # This keeps the window that was automatically opened by the workspace.active
+                    # From stealing focus from an active application if it took too long to open and I
+                    # went to another workspace
+                    _args = [
+                        "window.open"
+                        (mkLuaInline ''
+                            function(o_window)
+                                local function has_tag(w, tag_name)
+                                    for _, t in ipairs(w.tags) do
+                                        if t == tag_name then
+                                            return true
+                                        end
+                                    end
+                                    return false;
+                                end
+
+                                if not has_tag(o_window, "auto-open*") then
+                                    return;
+                                end
+
+                                local a_ws = hl.get_active_workspace();
+
+                                if o_window.workspace.name == a_ws.name then
+                                    hl.dispatch(hl.dsp.focus({window = o_window}));
+                                end
+                            end
+                        '')
+                    ];
+                }
             ];
         };
     };
 
     programs = {
-        hyprshot.enable = true;
         rofi = {
             enable = true;
             terminal = "${pkgs.ghostty}/bin/ghostty";

@@ -25,6 +25,8 @@
         MOZ_ENABLE_WAYLAND = "1";
     };
 
+    boot.tmp.cleanOnBoot = true;
+
     # Bootloader.
     boot.loader.systemd-boot.enable = true;
     boot.loader.efi.canTouchEfiVariables = true;
