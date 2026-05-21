@@ -1,6 +1,7 @@
 {
     pkgs,
     lib,
+    inputs,
     ...
 }: let
     wallpaper = ../wallpapers/earth.jpg;
@@ -117,6 +118,9 @@ in {
 
         settings = let
             mkLuaInline = lib.generators.mkLuaInline;
+            terminal-cmd = "${pkgs.ghostty}/bin/ghostty";
+            browser-cmd = "helium-browser";
+            media-player-cmd = "${pkgs.spotify}/bin/spotify";
         in {
             config = {
                 misc = {
@@ -243,8 +247,8 @@ in {
                 ++ [
                     # Execution
                     {_args = ["${mod} + Q" (mkLuaInline ''hl.dsp.window.close()'') {locked = true;}];}
-                    {_args = ["${mod} + T" (exec "${pkgs.ghostty}/bin/ghostty")];}
-                    {_args = ["${mod} + B" (exec "zen-beta")];} # I have this downloaded with a flake its too annoying to grab it from inputs
+                    {_args = ["${mod} + T" (exec terminal-cmd)];}
+                    {_args = ["${mod} + B" (exec browser-cmd)];} # I have this downloaded with a flake its too annoying to grab it from inputs
                     {_args = ["${mod} + Space" (exec "rofi -show combi")];}
 
                     # Media Controls
@@ -400,16 +404,20 @@ in {
                             persitant-workspaces = [
                                 {
                                     ws = "10";
-                                    pkgs-path = "${pkgs.ghostty}/bin/ghostty";
+                                    pkgs-path = terminal-cmd;
                                 }
 
                                 {
                                     ws = "11";
-                                    pkgs-path = "zen-beta";
+                                    pkgs-path = browser-cmd;
+                                }
+                                {
+                                    ws = "12";
+                                    pkgs-path = "${inputs.helium.packages.x86_64-linux.helium-whatsapp}/bin/helium-whatsapp";
                                 }
                                 {
                                     ws = "13";
-                                    pkgs-path = "${pkgs.spotify}/bin/spotify";
+                                    pkgs-path = media-player-cmd;
                                 }
                             ];
                         in

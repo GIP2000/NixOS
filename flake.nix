@@ -18,11 +18,10 @@
             inputs.nixpkgs.follows = "nixpkgs";
         };
 
-        zen-browser = {
-            url = "github:0xc000022070/zen-browser-flake";
+        helium = {
+            url = "path:./flakes/helium";
             inputs = {
                 nixpkgs.follows = "nixpkgs";
-                home-manager.follows = "home-manager";
             };
         };
     };

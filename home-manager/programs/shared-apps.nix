@@ -1,11 +1,16 @@
-{pkgs, ...}: {
+{
+    pkgs,
+    inputs,
+    ...
+}: {
     home.packages = with pkgs; [
+        nemo
         discord
         spotify
         blueman
         playerctl
         pwvucontrol
         alsa-utils # audio command line utils
-        # sioyek
+        inputs.helium.packages.x86_64-linux.helium-whatsapp
     ];
 }

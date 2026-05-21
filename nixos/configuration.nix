@@ -1,12 +1,7 @@
 # Edit this configuration file to define what should be installed on
 # your system.  Help is available in the configuration.nix(5) man page
 # and in the NixOS manual (accessible by running ‘nixos-help’).
-{
-    config,
-    pkgs,
-    inputs,
-    ...
-}: {
+{pkgs, ...}: {
     imports = [
         # Include the results of the hardware scan.
         ./hardware-configuration.nix
@@ -32,6 +27,13 @@
     boot.loader.efi.canTouchEfiVariables = true;
 
     boot.kernelParams = ["nvidia-drm.modeset=1"];
+
+    security.wrappers.chrome-sandbox = {
+        setuid = true;
+        owner = "root";
+        group = "root";
+        source = "${pkgs.chromium.sandbox}/bin/__chromium-suid-sandbox";
+    };
 
     networking.hostName = "nixos"; # Define your hostname.
     # networking.wireless.enable = true;  # Enables wireless support via wpa_supplicant.
