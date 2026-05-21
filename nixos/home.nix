@@ -50,6 +50,17 @@
             }
         ];
 
+        window_rule = [
+            # novrr on helium
+            # vrr has issues with helium (I think all of chromium) and nvidia on wayland
+            {
+                match = {
+                    class = "^helium$";
+                };
+                no_vrr = true;
+            }
+        ];
+
         on = [
             {
                 _args = let

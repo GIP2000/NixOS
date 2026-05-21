@@ -11,7 +11,7 @@
         nixpkgs,
     }: let
         system = "x86_64-linux";
-        pkgs = nixpkgs.legacyPackages.${system};
+        pkgs = import nixpkgs {inherit system;};
         version = "0.12.4.1";
     in {
         packages.${system} = {
@@ -43,10 +43,9 @@
 
                 src = pkgs.fetchurl {
                     url = "https://github.com/imputnet/helium-linux/releases/download/${version}/helium-${version}-x86_64_linux.tar.xz";
-                    sha256 = "sha256-cBqVVImuvEqUeK7QgM5+FB1q4w/cnCcwT8DXPweV4Lg="; # replace with real hash
+                    sha256 = "sha256-cBqVVImuvEqUeK7QgM5+FB1q4w/cnCcwT8DXPweV4Lg=";
                 };
 
-                # Chromium needs more libs than Firefox-based browsers
                 buildInputs = with pkgs; [
                     # Core
                     gtk3
@@ -124,10 +123,12 @@
                         egl-wayland
                         mesa
                         vulkan-loader
+                        pipewire
+                        libdrm
                     ])}" \
                     --add-flags "--ignore-gpu-blocklist" \
                     --add-flags "--enable-gpu-rasterization" \
-                    --add-flags "--enable-features=VaapiVideoDecoder,VaapiVideoEncoder,UseOzonePlatform" \
+                    --add-flags "--enable-features=VaapiVideoDecoder,VaapiVideoEncoder,UseOzonePlatform,WebRTCPipeWireCapturer" \
                     --add-flags "--ozone-platform=wayland"
                 '';
 
