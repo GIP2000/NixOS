@@ -83,6 +83,9 @@ in {
                 };
                 volume = {
                     label-show = false;
+                    scroll-up = "wpctl set-volume @DEFAULT_SINK@ 5%+";
+                    scroll-down = "wpctl set-volume @DEFAULT_SINK@ 5%-";
+                    middle-click = "wpctl set-mute @DEFAULT_SINK@ toggle";
                 };
                 power = {
                     left-click = "shutdown -h now";
