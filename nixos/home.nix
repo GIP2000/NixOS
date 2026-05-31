@@ -17,7 +17,9 @@
         stateVersion = "25.11";
         packages = with pkgs; [
             prismlauncher
-            rpcs3
+            (pkgs.rpcs3.overrideAttrs (prev: {
+                cmakeFlags = prev.cmakeFlags ++ [(lib.cmakeBool "BUILD_SHARED_LIBS" false)];
+            }))
             (symlinkJoin {
                 # this forces sioyek to run on my IGPU because its messed up on Nvidia
                 name = "sioyek";
@@ -56,6 +58,13 @@
             {
                 match = {
                     class = "^helium$";
+                };
+                no_vrr = true;
+            }
+
+            {
+                match = {
+                    initial_title = ".*The Simpsons™ Game.*";
                 };
                 no_vrr = true;
             }

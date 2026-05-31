@@ -81,10 +81,22 @@
 
     fonts.packages = with pkgs; [
         noto-fonts
+        noto-fonts-cjk-sans
+        noto-fonts-color-emoji
+
         adwaita-fonts
         nerd-fonts.jetbrains-mono
-        noto-fonts-cjk-sans
+        dejavu_fonts
     ];
+
+    system.activationScripts.rpcs3DejaVu = {
+        text = ''
+            mkdir -p /usr/share/fonts/truetype/dejavu
+            ln -sf ${pkgs.dejavu_fonts}/share/fonts/truetype/DejaVuSans.ttf \
+              /usr/share/fonts/truetype/dejavu/DejaVuSans.ttf
+        '';
+        deps = [];
+    };
 
     # Define a user account. Don't forget to set a password with ‘passwd’.
     programs.zsh.enable = true;
