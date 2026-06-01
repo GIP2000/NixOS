@@ -97,7 +97,6 @@
                 };
                 odin.enable = true;
                 nix.enable = true;
-                dart.enable = true;
                 zig = {
                     enable = true;
                     lsp.servers = ["zls"];
