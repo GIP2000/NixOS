@@ -12,7 +12,7 @@
     }: let
         system = "x86_64-linux";
         pkgs = import nixpkgs {inherit system;};
-        version = "0.12.4.1";
+        version = "0.12.5.1";
     in {
         packages.${system} = {
             helium-whatsapp = let
