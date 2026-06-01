@@ -43,7 +43,7 @@
 
                 src = pkgs.fetchurl {
                     url = "https://github.com/imputnet/helium-linux/releases/download/${version}/helium-${version}-x86_64_linux.tar.xz";
-                    sha256 = "sha256-cBqVVImuvEqUeK7QgM5+FB1q4w/cnCcwT8DXPweV4Lg=";
+                    sha256 = "sha256-tfiy1MkxXq9vOjp57R3ykHjleG0Viz/C2ttwXbHnPwA=";
                 };
 
                 buildInputs = with pkgs; [
