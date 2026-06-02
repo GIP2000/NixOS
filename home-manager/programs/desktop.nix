@@ -21,6 +21,12 @@
             @import "${catppuccinDefaultRofi}"
         '';
     };
+
+    catppuccinMochaGtk = pkgs.catppuccin-gtk.override {
+        variant = "mocha";
+        accents = ["blue"];
+        size = "standard";
+    };
 in {
     home.pointerCursor = {
         gtk.enable = true;
@@ -28,6 +34,19 @@ in {
         name = "Bibata-Modern-Classic";
         package = pkgs.bibata-cursors;
         size = 24;
+    };
+
+    gtk = {
+        enable = true;
+        theme = {
+            name = "catppuccin-mocha-blue-standard";
+            package = catppuccinMochaGtk;
+        };
+        iconTheme = {
+            name = "Papirus-Dark";
+            package = pkgs.catppuccin-papirus-folders;
+        };
+        gtk4.theme = null;
     };
 
     home.packages = with pkgs; [
