@@ -64,6 +64,7 @@ in {
         enable = true;
         autoInstallDependencies = true;
         settings = {
+            osd.enabled = false;
             bar = {
                 layout = [
                     {
