@@ -41,6 +41,7 @@ in {
     };
 
     services.wayle = {
+        package = inputs.nixpkgs-small.legacyPackages.x86_64-linux.wayle;
         enable = true;
         autoInstallDependencies = true;
         settings = {
