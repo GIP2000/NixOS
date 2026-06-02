@@ -53,82 +53,85 @@ in {
         wf-recorder
         grim
         slurp
+        satty
     ];
 
-    services.kdeconnect = {
-        enable = true;
-    };
+    services = {
+        kdeconnect = {
+            enable = true;
+        };
 
-    services.wayle = {
-        package = inputs.nixpkgs-small.legacyPackages.x86_64-linux.wayle;
-        enable = true;
-        autoInstallDependencies = true;
-        settings = {
-            osd.enabled = false;
-            bar = {
-                layout = [
-                    {
-                        monitor = "*";
-                        left = ["window-title" "hyprland-workspaces"];
-                        center = ["weather" "clock"];
-                        right = ["media" "bluetooth" "network" "volume" "power"];
-                    }
-                ];
-                location = "top";
-                rounding = "sm";
-                scale = 1;
-            };
-            modules = {
-                window-title = {
-                    label-max-length = 50;
+        wayle = {
+            package = inputs.nixpkgs-small.legacyPackages.x86_64-linux.wayle;
+            enable = true;
+            autoInstallDependencies = true;
+            settings = {
+                osd.enabled = false;
+                bar = {
+                    layout = [
+                        {
+                            monitor = "*";
+                            left = ["window-title" "hyprland-workspaces"];
+                            center = ["weather" "clock"];
+                            right = ["media" "bluetooth" "network" "volume" "power"];
+                        }
+                    ];
+                    location = "top";
+                    rounding = "sm";
+                    scale = 1;
                 };
-                hyprland-workspaces = {
-                    app-icons-show = true;
-                };
-                weather = {
-                    units = "imperial";
-                    location = "New York";
-                };
-                clock = {
-                    format = "%a %e %b | %I:%M %p";
-                    icon-show = false;
-                };
-                media = {
-                    label-max-length = 20;
-                };
-                bluetooth = {
-                    label-show = false;
-                };
-                network = {
-                    label-show = false;
-                };
-                volume = {
-                    label-show = false;
-                    scroll-up = "wpctl set-volume @DEFAULT_SINK@ 5%+";
-                    scroll-down = "wpctl set-volume @DEFAULT_SINK@ 5%-";
-                    middle-click = "wpctl set-mute @DEFAULT_SINK@ toggle";
-                };
-                power = {
-                    left-click = "shutdown -h now";
-                    right-click = "hyprctl dispatch 'hl.dsp.exit()'";
+                modules = {
+                    window-title = {
+                        label-max-length = 50;
+                    };
+                    hyprland-workspaces = {
+                        app-icons-show = true;
+                    };
+                    weather = {
+                        units = "imperial";
+                        location = "New York";
+                    };
+                    clock = {
+                        format = "%a %e %b | %I:%M %p";
+                        icon-show = false;
+                    };
+                    media = {
+                        label-max-length = 20;
+                    };
+                    bluetooth = {
+                        label-show = false;
+                    };
+                    network = {
+                        label-show = false;
+                    };
+                    volume = {
+                        label-show = false;
+                        scroll-up = "wpctl set-volume @DEFAULT_SINK@ 5%+";
+                        scroll-down = "wpctl set-volume @DEFAULT_SINK@ 5%-";
+                        middle-click = "wpctl set-mute @DEFAULT_SINK@ toggle";
+                    };
+                    power = {
+                        left-click = "shutdown -h now";
+                        right-click = "hyprctl dispatch 'hl.dsp.exit()'";
+                    };
                 };
             };
         };
-    };
 
-    services.hyprpaper = {
-        enable = true;
-        settings = {
-            splash = false;
-            preload = [
-                "${wallpaper}"
-            ];
-            wallpaper = [
-                {
-                    monitor = "";
-                    path = "${wallpaper}";
-                }
-            ];
+        hyprpaper = {
+            enable = true;
+            settings = {
+                splash = false;
+                preload = [
+                    "${wallpaper}"
+                ];
+                wallpaper = [
+                    {
+                        monitor = "";
+                        path = "${wallpaper}";
+                    }
+                ];
+            };
         };
     };
 
@@ -266,6 +269,21 @@ in {
                           return result
                         end
                     '';
+
+                satty-cmd =
+                    ''
+                        satty
+                            -f -
+                            --copy-command wl-copy
+                            --floating-hack
+                            --early-exit
+                            --actions-on-escape save-to-clipboard
+                            --actions-on-right-click save-to-clipboard
+                    ''
+                    |> lib.strings.splitString "\n"
+                    |> builtins.map lib.strings.trim
+                    |> builtins.filter (val: builtins.stringLength val > 0)
+                    |> builtins.concatStringsSep " ";
             in
                 workspace-binds
                 ++ [
@@ -287,16 +305,7 @@ in {
                     {
                         _args = [
                             "${mod} + S"
-                            (mkLuaInline ''
-                                function()
-                                    hl.dispatch(hl.dsp.exec_cmd("grim -g \"$(slurp -d)\" - | wl-copy"));
-                                    hl.notification.create({
-                                        text = "Screenshot Saved to Clipboard",
-                                        timeout = 5000,
-                                        icon = "ok"
-                                    })
-                                end
-                            '')
+                            (exec ''grim -g \"$(slurp -d)\" - | ${satty-cmd}'')
                         ];
                     }
                     {
@@ -305,12 +314,7 @@ in {
                             (mkLuaInline ''
                                 function()
                                     local monitor = hl.get_active_monitor();
-                                    hl.dispatch(hl.dsp.exec_cmd("grim -o " .. monitor.name .."- | wl-copy"));
-                                    hl.notification.create({
-                                        text = "Screenshot of screen " ..monitor.name .." Saved to Clipboard",
-                                        timeout = 5000,
-                                        icon = "ok"
-                                    })
+                                    hl.dispatch(hl.dsp.exec_cmd("grim -o " .. monitor.name .." - | ${satty-cmd}"));
                                 end
                             '')
                         ];
