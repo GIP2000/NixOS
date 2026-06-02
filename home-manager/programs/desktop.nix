@@ -50,10 +50,8 @@ in {
     };
 
     home.packages = with pkgs; [
-        wf-recorder
-        grim
-        slurp
-        satty
+        wf-recorder # pkill doesn't work well unless I call it from the path
+        satty # I want to use this to open images
     ];
 
     services = {
@@ -272,7 +270,7 @@ in {
 
                 satty-cmd =
                     ''
-                        satty
+                        ${pkgs.satty}/bin/satty
                             -f -
                             --copy-command wl-copy
                             --floating-hack
@@ -305,7 +303,7 @@ in {
                     {
                         _args = [
                             "${mod} + S"
-                            (exec ''grim -g \"$(slurp -d)\" - | ${satty-cmd}'')
+                            (exec ''${pkgs.grim}/bin/grim -g \"$(${pkgs.slurp}/bin/slurp -d)\" - | ${satty-cmd}'')
                         ];
                     }
                     {
@@ -314,7 +312,7 @@ in {
                             (mkLuaInline ''
                                 function()
                                     local monitor = hl.get_active_monitor();
-                                    hl.dispatch(hl.dsp.exec_cmd("grim -o " .. monitor.name .." - | ${satty-cmd}"));
+                                    hl.dispatch(hl.dsp.exec_cmd("${pkgs.grim}/bin/grim -o " .. monitor.name .." - | ${satty-cmd}"));
                                 end
                             '')
                         ];
@@ -329,6 +327,7 @@ in {
                                     local monitor = nil;
 
                                     return function ()
+                                        -- pkill doesn't work well unless I call it from PATH make sure its installed somewhere else
                                         os.execute("pkill -INT -f wf-recorder");
                                         if tmp_path then
                                             hl.dispatch(hl.dsp.exec_cmd("echo -n \"file:///" ..tmp_path .."\" | wl-copy --type text/uri-list"));
