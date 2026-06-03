@@ -99,6 +99,8 @@
     };
 
     # Define a user account. Don't forget to set a password with ‘passwd’.
+
+    programs.nix-ld.enable = true;
     programs.zsh.enable = true;
     programs.steam = {
         enable = true;
