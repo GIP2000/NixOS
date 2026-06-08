@@ -4,11 +4,11 @@
     ...
 }: {
     imports = [
-        ../home-manager/programs/nvim.nix
-        ../home-manager/programs/shell.nix
-        ../home-manager/programs/desktop.nix
-        ../home-manager/programs/browser.nix
-        ../home-manager/programs/shared-apps.nix
+        ../../home-manager/programs/nvim.nix
+        ../../home-manager/programs/shell.nix
+        ../../home-manager/programs/desktop.nix
+        ../../home-manager/programs/browser.nix
+        ../../home-manager/programs/shared-apps.nix
     ];
 
     home = {

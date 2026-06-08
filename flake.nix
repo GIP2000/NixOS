@@ -28,14 +28,30 @@
         home-manager,
         ...
     }: {
+        nixosConfigurations.nixos-li = nixpkgs.lib.nixosSystem {
+            system = "x86_64-linux";
+            specialArgs = {inherit inputs;};
+            modules = [
+                ./machines/nixos-li/configuration.nix
+                home-manager.nixosModules.home-manager
+                {
+                    home-manager.users.gip = import ./machines/nixos-li/home.nix;
+                    home-manager.extraSpecialArgs = {
+                        inherit inputs;
+                        inherit self;
+                    };
+                }
+            ];
+        };
+
         nixosConfigurations.nixos = nixpkgs.lib.nixosSystem {
             system = "x86_64-linux";
             specialArgs = {inherit inputs;};
             modules = [
-                ./nixos/configuration.nix
+                ./machines/nixos/configuration.nix
                 home-manager.nixosModules.home-manager
                 {
-                    home-manager.users.gip = import ./nixos/home.nix;
+                    home-manager.users.gip = import ./machines/nixos/home.nix;
                     home-manager.extraSpecialArgs = {
                         inherit inputs;
                         inherit self;
