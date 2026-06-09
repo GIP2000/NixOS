@@ -20,19 +20,22 @@
             (pkgs.rpcs3.overrideAttrs (prev: {
                 cmakeFlags = prev.cmakeFlags ++ [(lib.cmakeBool "BUILD_SHARED_LIBS" false)];
             }))
-            #   (symlinkJoin {
-            #       # this forces sioyek to run on my IGPU because its messed up on Nvidia
-            #       name = "sioyek";
-            #       paths = [sioyek];
-            #       buildInputs = [makeWrapper];
-            #       postBuild = ''
-            #           wrapProgram $out/bin/sioyek \
-            #             --set __EGL_VENDOR_LIBRARY_FILENAMES ${mesa}/share/glvnd/egl_vendor.d/50_mesa.json
-            #       '';
-            #   })
+            (symlinkJoin {
+                # this forces sioyek to run on my IGPU because its messed up on Nvidia
+                name = "sioyek";
+                paths = [sioyek];
+                buildInputs = [makeWrapper];
+                postBuild = ''
+                    wrapProgram $out/bin/sioyek \
+                      --set __EGL_VENDOR_LIBRARY_FILENAMES ${mesa}/share/glvnd/egl_vendor.d/50_mesa.json
+                '';
+            })
             davinci-resolve
         ];
     };
+
+    services.wayle.settings.bar.modules.window-title.label-max-length = lib.mkForce 10;
+    programs.ghostty.settings.font-size = lib.mkForce 14;
 
     wayland.windowManager.hyprland.settings = {
         config.misc = {
