@@ -34,7 +34,7 @@
         ];
     };
 
-    services.wayle.settings.bar.modules.window-title.label-max-length = lib.mkForce 10;
+    services.wayle.settings.bar.scale = lib.mkForce 0.75;
     programs.ghostty.settings.font-size = lib.mkForce 14;
 
     wayland.windowManager.hyprland.settings = {
