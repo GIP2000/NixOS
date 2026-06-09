@@ -14,5 +14,6 @@
         inputs.helium.packages.x86_64-linux.helium-whatsapp
         vlc
         ffmpeg
+        opencode
     ];
 }

@@ -114,18 +114,26 @@
                 set-option -g default-command ${pkgs.zsh}/bin/zsh
                 set-option -g default-terminal "screen-256color"
 
-                         set -g history-limit 10000
+                set -g history-limit 10000
 
-                         setw -g mouse on
+                setw -g mouse on
 
-                         set-window-option -g mode-keys vi
+                set-window-option -g mode-keys vi
 
-                         bind -T copy-mode-vi v send -X begin-selection
-                         bind -T copy-mode-vi y send-keys -X copy-pipe-and-cancel "pbcopy"
-                         bind P paste-buffer
-                         bind -T copy-mode-vi MouseDragEnd1Pane send-keys -X copy-pipe-and-cancel "pbcopy"
+                bind h select-pane -L
+                bind j select-pane -D
+                bind k select-pane -U
+                bind l select-pane -R
 
-                         bind-key f display-popup -E "tmux-sessionizer"
+                bind v split-window -h
+                bind w split-window -v
+
+                bind -T copy-mode-vi v send -X begin-selection
+                bind -T copy-mode-vi y send-keys -X copy-pipe-and-cancel "pbcopy"
+                bind P paste-buffer
+                bind -T copy-mode-vi MouseDragEnd1Pane send-keys -X copy-pipe-and-cancel "pbcopy"
+
+                bind-key f display-popup -E "tmux-sessionizer"
             '';
         };
     };
