@@ -17,9 +17,7 @@
         stateVersion = "25.11";
         packages = with pkgs; [
             prismlauncher
-            (pkgs.rpcs3.overrideAttrs (prev: {
-                cmakeFlags = prev.cmakeFlags ++ [(lib.cmakeBool "BUILD_SHARED_LIBS" false)];
-            }))
+            # pkgs.rpcs3 This is broken
             (symlinkJoin {
                 # this forces sioyek to run on my IGPU because its messed up on Nvidia
                 name = "sioyek";
