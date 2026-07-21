@@ -2,9 +2,11 @@
     inputs,
     config,
     ...
-}: {
+}: let
+    helium = inputs.helium.packages.x86_64-linux.helium-browser;
+in {
     home.packages = [
-        inputs.helium.packages.x86_64-linux.helium-browser
+        helium
     ];
 
     xdg.mimeApps = {

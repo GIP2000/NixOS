@@ -15,6 +15,7 @@
     };
 
     hardware.bluetooth.enable = true;
+    hardware.steam-hardware.enable = true;
 
     environment.sessionVariables = {
         MOZ_ENABLE_WAYLAND = "1";

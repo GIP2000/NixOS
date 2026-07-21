@@ -2,7 +2,9 @@
     pkgs,
     inputs,
     ...
-}: {
+}: let
+    whatsapp = inputs.helium.packages.x86_64-linux.helium-whatsapp;
+in {
     home.packages = with pkgs; [
         nemo
         discord
@@ -11,7 +13,7 @@
         playerctl
         pwvucontrol
         alsa-utils # audio command line utils
-        inputs.helium.packages.x86_64-linux.helium-whatsapp
+        whatsapp
         vlc
         ffmpeg
         opencode
