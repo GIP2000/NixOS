@@ -38,7 +38,23 @@
                     signatureHelp = "<leader>ls";
                 };
 
-                servers.zls.cmd = lib.mkForce ["zls"];
+                servers = {
+                    zls.cmd = lib.mkForce ["zls"];
+                    rust = {
+                        cmd = ["rust-analyzer"];
+                        init_options = ''
+                            ['rust-analyzer'] = {
+                                cargo = {
+                                    allFeatures = true,
+                                },
+                                checkOnSave = true,
+                                procMacro = {
+                                    enable = true,
+                                },
+                            },
+                        '';
+                    };
+                };
             };
 
             autocomplete.nvim-cmp = {
@@ -66,24 +82,10 @@
             languages = {
                 enableTreesitter = true;
                 enableFormat = true;
-                rust = {
-                    enable = true;
-                    lsp = {
-                        package = ["rust-analyzer"];
-                        opts = ''
-                            ['rust-analyzer'] = {
-                                cargo = {
-                                    allFeatures = true,
-                                },
-                                checkOnSave = true,
-                                procMacro = {
-                                    enable = true,
-                                },
-                            },
-                        '';
-                    };
-                };
 
+                rust.enable = true;
+                odin.enable = true;
+                nix.enable = true;
                 typescript = {
                     enable = true;
                     format = {
@@ -95,8 +97,6 @@
                         types = ["biomejs"];
                     };
                 };
-                odin.enable = true;
-                nix.enable = true;
                 zig = {
                     enable = true;
                     lsp.servers = ["zls"];

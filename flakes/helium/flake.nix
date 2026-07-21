@@ -12,7 +12,8 @@
     }: let
         system = "x86_64-linux";
         pkgs = import nixpkgs {inherit system;};
-        version = "0.12.5.1";
+        version = "0.14.7.1";
+        hash = "sha256-W7p+DEx85p56si+hNAKFVM4q8rh5aZLS+BNmUTFroiE=";
     in {
         packages.${system} = {
             helium-whatsapp = let
@@ -43,7 +44,7 @@
 
                 src = pkgs.fetchurl {
                     url = "https://github.com/imputnet/helium-linux/releases/download/${version}/helium-${version}-x86_64_linux.tar.xz";
-                    sha256 = "sha256-tfiy1MkxXq9vOjp57R3ykHjleG0Viz/C2ttwXbHnPwA=";
+                    sha256 = hash;
                 };
 
                 buildInputs = with pkgs; [
