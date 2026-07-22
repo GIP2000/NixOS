@@ -40,8 +40,8 @@
 
                 servers = {
                     zls.cmd = lib.mkForce ["zls"];
-                    rust = {
-                        cmd = ["rust-analyzer"];
+                    rust-analyzer = {
+                        cmd = lib.mkForce ["rust-analyzer"];
                         init_options = ''
                             ['rust-analyzer'] = {
                                 cargo = {
