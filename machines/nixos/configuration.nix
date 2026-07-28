@@ -159,7 +159,6 @@
     #     card 0
     #     }
     # '';
-    # services.gnome.gnome-keyring.enable = true;
     programs.hyprland = {
         enable = true;
         xwayland.enable = true;

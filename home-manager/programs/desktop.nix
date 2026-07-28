@@ -4,7 +4,9 @@
     inputs,
     ...
 }: let
-    wallpaper = ../wallpapers/earth.jpg;
+    # wallpaper = ../wallpapers/earth.jpg;
+    # wallpaper = "${pkgs.kdePackages.breeze}/share/wallpapers/Next/contents/images/5120x2880.png";
+    wallpaper = "${pkgs.kdePackages.plasma-workspace-wallpapers}/share/wallpapers/ScarletTree/contents/images/5120x2880.png";
 
     catppuccinMochaRofi = builtins.fetchurl {
         url = "https://raw.githubusercontent.com/catppuccin/rofi/main/themes/catppuccin-mocha.rasi";
