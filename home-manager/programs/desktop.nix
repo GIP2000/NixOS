@@ -259,6 +259,7 @@ in {
                     temp-str = builtins.substring 0 (str-len - 1) rest-str;
                     final-str = "${temp-str}, follow = true}";
                 in (mkLuaInline ''hl.dsp.window.move(${final-str})'');
+                move-ws = rest-str: (mkLuaInline ''hl.dsp.workspace.move({monitor = "${rest-str}"})'');
                 uuid =
                     #lua
                     ''
@@ -401,9 +402,32 @@ in {
                     {_args = ["${wmod} + SHIFT + h" (dir "l" |> move)];}
                     {_args = ["${wmod} + SHIFT + l" (dir "r" |> move)];}
 
-                    # Special
-                    {_args = ["${wmod} + F" (mkLuaInline ''hl.dsp.workspace.toggle_special("special")'')];}
-                    {_args = ["${wmod} + SHIFT + F" (workspace "special:special" |> move)];}
+                    {_args = ["${mod} + SHIFT + j" ("d" |> move-ws)];}
+                    {_args = ["${mod} + SHIFT + k" ("u" |> move-ws)];}
+                    {_args = ["${mod} + SHIFT + h" ("l" |> move-ws)];}
+                    {_args = ["${mod} + SHIFT + l" ("r" |> move-ws)];}
+
+                    # Hide
+                    {
+                        _args = [
+                            "${mod} + H"
+                            (mkLuaInline ''
+                                function ()
+                                    local ws = hl.get_active_workspace();
+                                    local sp = "special:minimized-".. ws.name;
+                                    local tag = "min-".. ws.name;
+
+                                    if hl.get_workspace(sp) then
+                                        hl.dispatch(hl.dsp.window.move({ workspace = hl.get_active_workspace(), window = "tag:".. tag }))
+                                        hl.dispatch(hl.dsp.window.clear_tags({ window = "tag:" .. tag }))
+                                    else
+                                        hl.dispatch(hl.dsp.window.tag({ tag = tag, window = hl.get_active_window() }))
+                                        hl.dispatch(hl.dsp.window.move({ workspace = sp, follow = false }))
+                                    end
+                                end
+                            '')
+                        ];
+                    }
 
                     # Floating
                     {
