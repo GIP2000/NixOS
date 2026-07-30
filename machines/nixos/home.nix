@@ -45,9 +45,10 @@
             }
             {
                 output = "HDMI-A-2";
-                mode = "2560x1440@143.99899Hz";
-                position = "-2560x0";
+                mode = " 2560x1440@144.00";
+                position = "+2560x0";
                 scale = 1;
+                transform = 3;
             }
         ];
 
