@@ -82,15 +82,23 @@
                                 return;
                             end
 
-                            hl.dispatch(hl.dsp.workspace.move({
-                                workspace = "10",
-                                monitor = "DP-3",
-                            }));
+                            -- hl.dispatch(hl.dsp.focus({
+                            --     monitor = "DP-3"
+                            -- }));
 
                             hl.dispatch(hl.dsp.focus({
                                 workspace = "10",
-                                on_current_monitor = false,
+                                on_current_monitor = true,
                             }));
+
+
+                            hl.dispatch(hl.dsp.workspace.move({
+                                workspace = "10",
+                                monitor = "DP-3",
+                                follow = true,
+                            }));
+
+
                         end
                     '')
                 ];
