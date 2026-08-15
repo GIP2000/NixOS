@@ -15,6 +15,11 @@
             inputs.nixpkgs.follows = "nixpkgs";
         };
 
+        nixos-hardware = {
+            url = "github:NixOS/nixos-hardware/master";
+            inputs.nixpkgs.follows = "nixpkgs";
+        };
+
         helium = {
             url = "path:./flakes/helium";
             inputs = {
@@ -26,8 +31,26 @@
         self,
         nixpkgs,
         home-manager,
+        nixos-hardware,
         ...
     }: {
+        nixosConfigurations.nixos-framework = nixpkgs.lib.nixosSystem {
+            system = "x86_64-linux";
+            specialArgs = {inherit inputs;};
+            modules = [
+                ./machines/nixos-framework/configuration.nix
+                home-manager.nixosModules.home-manager
+                nixos-hardware.nixosModules.framework-intel-core-ultra-series3
+                {
+                    home-manager.users.gip = import ./machines/nixos-framework/home.nix;
+                    home-manager.extraSpecialArgs = {
+                        inherit inputs;
+                        inherit self;
+                    };
+                }
+            ];
+        };
+
         nixosConfigurations.nixos-li = nixpkgs.lib.nixosSystem {
             system = "x86_64-linux";
             specialArgs = {inherit inputs;};
