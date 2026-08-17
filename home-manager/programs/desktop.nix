@@ -77,7 +77,7 @@ in {
                         }
                     ];
                     location = "top";
-                    rounding = "sm";
+                    rounding = "none";
                     scale = 1;
                 };
                 modules = {
