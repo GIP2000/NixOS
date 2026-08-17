@@ -12,8 +12,8 @@
     }: let
         system = "x86_64-linux";
         pkgs = import nixpkgs {inherit system;};
-        version = "0.14.7.1";
-        hash = "sha256-W7p+DEx85p56si+hNAKFVM4q8rh5aZLS+BNmUTFroiE=";
+        version = "0.15.5.1";
+        hash = "sha256-80oe4aarLjEJ2S45OVEqN8/mii8NIwtSXMFYn8GS/Zc=";
     in {
         packages.${system} = {
             helium-whatsapp = let
