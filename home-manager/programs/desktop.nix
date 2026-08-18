@@ -101,6 +101,9 @@ in {
                     bluetooth = {
                         label-show = false;
                     };
+                    brightness = {
+                        label-show = false;
+                    };
                     network = {
                         label-show = false;
                     };
