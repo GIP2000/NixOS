@@ -155,6 +155,7 @@ in {
             config = {
                 misc = {
                     middle_click_paste = false;
+                    initial_workspace_tracking = 2;
                 };
                 input = {
                     repeat_delay = 300;
