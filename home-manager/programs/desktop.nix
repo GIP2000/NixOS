@@ -159,8 +159,20 @@ in {
                 input = {
                     repeat_delay = 300;
                     repeat_rate = 30;
+                    touchpad = {
+                        natural_scroll = true;
+                        clickfinger_behavior = true;
+                    };
                 };
             };
+
+            gesture = [
+                {
+                    fingers = 4;
+                    direction = "horizontal";
+                    action = "workspace";
+                }
+            ];
             animation = [
                 {
                     leaf = "workspaces";
@@ -297,9 +309,14 @@ in {
                     {_args = ["${mod} + B" (exec browser-cmd)];} # I have this downloaded with a flake its too annoying to grab it from inputs
                     {_args = ["${mod} + Space" (exec "rofi -show combi")];}
 
+                    # Brightness
+                    {_args = ["XF86MonBrightnessUp" (exec "brightnessctl set +5%") {repeating = true;}];}
+                    {_args = ["XF86MonBrightnessDown" (exec "brightnessctl set 5%-") {repeating = true;}];}
+
                     # Media Controls
-                    {_args = ["XF86AudioRaiseVolume" (exec "wpctl set-volume @DEFAULT_SINK@ 5%+")];}
-                    {_args = ["XF86AudioLowerVolume" (exec "wpctl set-volume @DEFAULT_SINK@ 5%-")];}
+                    {_args = ["XF86AudioRaiseVolume" (exec "wpctl set-volume @DEFAULT_SINK@ 5%+") {repeating = true;}];}
+                    {_args = ["XF86AudioLowerVolume" (exec "wpctl set-volume @DEFAULT_SINK@ 5%-") {repeating = true;}];}
+
                     {_args = ["XF86AudioMute" (exec "wpctl set-mute @DEFAULT_SINK@ toggle")];}
                     {_args = ["XF86AudioPlay" (exec "playerctl play-pause")];}
                     {_args = ["XF86AudioNext" (exec "playerctl next")];}

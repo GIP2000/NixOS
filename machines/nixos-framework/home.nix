@@ -111,27 +111,9 @@
         };
     };
     wayland.windowManager.hyprland.settings = {
-        bind = let
-            mkLuaInline = lib.generators.mkLuaInline;
-            exec = cmd: mkLuaInline ''hl.dsp.exec_cmd("${cmd}")'';
-        in [
-            {_args = ["XF86MonBrightnessUp" (exec "brightnessctl set +5%")];}
-            {_args = ["XF86MonBrightnessDown" (exec "brightnessctl set 5%-")];}
-        ];
-
-        gesture = [
-            {
-                fingers = 4;
-                direction = "horizontal";
-                action = "workspace";
-            }
-        ];
-
         config.input = {
             kb_options = "caps:escape";
             touchpad = {
-                natural_scroll = true;
-                clickfinger_behavior = true;
                 scroll_factor = 0.3;
             };
         };
