@@ -86,15 +86,26 @@
                 rust.enable = true;
                 odin.enable = true;
                 nix.enable = true;
-                typescript = {
+                tsx = {
                     enable = true;
-                    format = {
-                        enable = true;
-                        type = ["biome"];
-                    };
+                    # format = {
+                    #     enable = true;
+                    #     # type = ["biome"];
+                    # };
                     extraDiagnostics = {
                         enable = true;
-                        types = ["biomejs"];
+                        # types = ["biomejs"];
+                    };
+                };
+                typescript = {
+                    enable = true;
+                    # format = {
+                    #     enable = true;
+                    #     # type = ["biome"];
+                    # };
+                    extraDiagnostics = {
+                        enable = true;
+                        # types = ["biomejs"];
                     };
                 };
                 zig = {

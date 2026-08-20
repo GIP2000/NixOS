@@ -117,5 +117,11 @@
                 scroll_factor = 0.3;
             };
         };
+        device = [
+            {
+                name = "1343-touchpad";
+                sensitivity = -0.5;
+            }
+        ];
     };
 }
