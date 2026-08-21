@@ -131,6 +131,7 @@
         adwaita-icon-theme
         gnome-themes-extra
         brightnessctl
+        gparted
         # dconf
     ];
     # hardware.brightnessctl.enable = true;

@@ -16,16 +16,7 @@
         homeDirectory = "/home/gip";
         stateVersion = "25.11";
         packages = with pkgs; [
-            (symlinkJoin {
-                # this forces sioyek to run on my IGPU because its messed up on Nvidia
-                name = "sioyek";
-                paths = [sioyek];
-                buildInputs = [makeWrapper];
-                postBuild = ''
-                    wrapProgram $out/bin/sioyek \
-                      --set __EGL_VENDOR_LIBRARY_FILENAMES ${mesa}/share/glvnd/egl_vendor.d/50_mesa.json
-                '';
-            })
+            sioyek
         ];
     };
     programs = {
@@ -111,8 +102,21 @@
         };
     };
     wayland.windowManager.hyprland.settings = {
+        monitor = [
+            {
+                output = "eDP-1";
+                mode = "preferred";
+                position = "auto";
+                scale = 2;
+            }
+            {
+                output = "";
+                mode = "preferred";
+                position = "auto";
+                scale = 1;
+            }
+        ];
         config.input = {
-            kb_options = "caps:escape";
             touchpad = {
                 scroll_factor = 0.3;
             };
@@ -121,6 +125,10 @@
             {
                 name = "1343-touchpad";
                 sensitivity = -0.5;
+            }
+            {
+                name = "at-translated-set-2-keyboard";
+                kb_options = "caps:escape";
             }
         ];
     };

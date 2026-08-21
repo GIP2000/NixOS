@@ -17,5 +17,6 @@ in {
         vlc
         ffmpeg
         opencode
+        gnome-sound-recorder
     ];
 }

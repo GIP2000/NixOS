@@ -160,30 +160,6 @@
             };
 
             keymaps = [
-                (nnoremap "j" "gj")
-                (nnoremap "gj" "j")
-                (vnoremap "gj" "j")
-                (
-                    (vnoremap "j" "mode() ==# 'v' ? 'gj' : 'j'")
-                    // {
-                        expr = true;
-                        noremap = false;
-                        silent = false;
-                    }
-                )
-
-                (nnoremap "k" "gk")
-                (nnoremap "gk" "k")
-                (vnoremap "gk" "k")
-                (
-                    (vnoremap "k" "mode() ==# 'v' ? 'gk' : 'k'")
-                    // {
-                        expr = true;
-                        noremap = false;
-                        silent = false;
-                    }
-                )
-
                 (nnoremap "<leader>c" ":q<CR>")
 
                 (nnoremap "<C-h>" "<C-w>h")
