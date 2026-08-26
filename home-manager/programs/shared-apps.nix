@@ -18,5 +18,6 @@ in {
         ffmpeg
         opencode
         gnome-sound-recorder
+        localsend
     ];
 }

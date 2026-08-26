@@ -17,6 +17,9 @@
         stateVersion = "25.11";
         packages = with pkgs; [
             sioyek
+            slack
+            claude-code
+            codex
         ];
     };
     programs = {
@@ -87,6 +90,7 @@
                 window-title = {
                     label-max-length = lib.mkForce 30;
                 };
+                power.middle-click = "hyprlock";
             };
             bar = {
                 scale = lib.mkForce 0.75;
@@ -108,6 +112,12 @@
                 mode = "preferred";
                 position = "auto";
                 scale = 2;
+            }
+            {
+                output = "DP-1";
+                mode = "2560x1440@99.95Hz";
+                position = "auto";
+                scale = 1;
             }
             {
                 output = "";

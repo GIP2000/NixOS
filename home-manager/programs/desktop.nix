@@ -156,6 +156,7 @@ in {
                 misc = {
                     middle_click_paste = false;
                     initial_workspace_tracking = 2;
+                    focus_on_activate = true;
                 };
                 input = {
                     repeat_delay = 300;
