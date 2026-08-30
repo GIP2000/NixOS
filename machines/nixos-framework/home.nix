@@ -20,6 +20,18 @@
             slack
             claude-code
             codex
+
+            (inputs.helium.mkWebApp {
+                name = "helium-notion-work";
+                url = "https://app.notion.com/";
+                desktopName = "Notion Work";
+                icon = "Notion";
+                comment = "Notion note taking applicaiton";
+                categories = ["Office"];
+                extra_args = [
+                    "--profile-directory=Work"
+                ];
+            })
         ];
     };
     programs = {

@@ -12,32 +12,52 @@
     }: let
         system = "x86_64-linux";
         pkgs = import nixpkgs {inherit system;};
-        version = "0.15.5.1";
-        hash = "sha256-80oe4aarLjEJ2S45OVEqN8/mii8NIwtSXMFYn8GS/Zc=";
+        version = "0.16.2.1";
+        hash = "sha256-gAg4BpJyhwpvT8nq3wF8CBn32Jq/YHEXCAsHnUv3wBc=";
     in {
-        packages.${system} = {
-            helium-whatsapp = let
-                script = pkgs.writeShellApplication {
-                    name = "helium-whatsapp";
-                    runtimeInputs = [self.packages.${system}.helium-browser];
-                    text = ''
-                        helium-browser --app=https://web.whatsapp.com/
-                    '';
-                };
+        mkWebApp = {
+            name,
+            desktopName,
+            icon,
+            comment,
+            categories,
+            url,
+            extra_args ? [],
+        }: let
+            helium-browser-pkg = self.packages.${system}.helium-browser;
+            helium-browser-path = "${helium-browser-pkg}/bin/helium-browser";
+            script = pkgs.writeShellApplication {
+                name = name;
+                runtimeInputs = [helium-browser-pkg];
+                text = ''
+                    ${helium-browser-path} --app=${url}
+                '';
+            };
+        in
+            pkgs.symlinkJoin {
+                name = name;
+                paths = [
+                    script
+                    (pkgs.makeDesktopItem {
+                        name = name;
+                        desktopName = desktopName;
+                        exec = "${script}/bin/${name} ${builtins.concatStringsSep " " (extra_args ++ ["%U"])}";
+                        icon = icon;
+                        comment = comment;
+                        categories = categories;
+                    })
+                ];
+            };
 
-                desktop = pkgs.makeDesktopItem {
-                    name = "helium-whatsapp";
-                    desktopName = "WhatsApp";
-                    exec = "${script}/bin/helium-whatsapp %U";
-                    icon = "whatsapp";
-                    comment = "WhatsApp Web running through helium browser";
-                    categories = ["Network" "InstantMessaging"];
-                };
-            in
-                pkgs.symlinkJoin {
-                    name = "helium-whatsapp";
-                    paths = [script desktop];
-                };
+        packages.${system} = {
+            helium-whatsapp = self.mkWebApp {
+                name = "helium-whatsapp";
+                url = "https://web.whatsapp.com/";
+                desktopName = "WhatsApp";
+                icon = "whatsapp";
+                comment = "WhatsApp Web running through helium browser";
+                categories = ["Network" "InstantMessaging"];
+            };
             helium-browser = pkgs.stdenv.mkDerivation {
                 pname = "helium-browser";
                 inherit version;
