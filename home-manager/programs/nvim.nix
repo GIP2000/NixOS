@@ -88,10 +88,11 @@
                 nix.enable = true;
                 tsx = {
                     enable = true;
-                    # format = {
-                    #     enable = true;
-                    #     # type = ["biome"];
-                    # };
+                    lsp.servers = ["typescript-go"];
+                    format = {
+                        enable = false;
+                        # type = ["biome"];
+                    };
                     extraDiagnostics = {
                         enable = true;
                         # types = ["biomejs"];
@@ -99,6 +100,7 @@
                 };
                 typescript = {
                     enable = true;
+                    lsp.servers = ["typescript-go"];
                     # format = {
                     #     enable = true;
                     #     # type = ["biome"];
@@ -126,6 +128,15 @@
                     liveGrep = "<leader>fw";
                     diagnostics = "<leader>fd";
                 };
+                extensions = [
+                    {
+                        name = "live_grep_args";
+                        packages = [pkgs.vimPlugins.telescope-live-grep-args-nvim];
+                        setup = {
+                            auto_quoting = true;
+                        };
+                    }
+                ];
             };
             navigation.harpoon = {
                 enable = true;
@@ -172,6 +183,8 @@
                 (nnoremap "<leader>e" ":Oil<CR>")
 
                 (nnoremap "<leader>u" ":UndotreeToggle<CR>")
+
+                (nnoremap "<leader>fg" "<cmd>lua require('telescope').extensions.live_grep_args.live_grep_args()<CR>")
             ];
 
             options = {

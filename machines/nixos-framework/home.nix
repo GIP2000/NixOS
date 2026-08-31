@@ -1,6 +1,7 @@
 {
     pkgs,
     lib,
+    inputs,
     ...
 }: {
     imports = [
@@ -31,6 +32,14 @@
                 extra_args = [
                     "--profile-directory=Work"
                 ];
+            })
+            (inputs.helium.mkWebApp {
+                name = "Linear";
+                url = "https://linear.app/";
+                desktopName = "Linear";
+                icon = "Linear";
+                comment = "Linear Tickiting";
+                categories = ["Office"];
             })
         ];
     };

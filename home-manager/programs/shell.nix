@@ -51,6 +51,12 @@
     programs = {
         git = {
             enable = true;
+            includes = [
+                {
+                    condition = "gitdir:~/Documents/dev/sante-platform/";
+                    contents.user.email = "gregory.presser@santehq.com";
+                }
+            ];
             settings = {
                 user = {
                     name = "Gregory Presser";
