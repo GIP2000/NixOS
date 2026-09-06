@@ -123,11 +123,9 @@
     };
 
     nix.settings = {
-        substituters = ["https://hyprland.cachix.org"];
-        trusted-substituters = ["https://hyprland.cachix.org"];
-        trusted-public-keys = ["hyprland.cachix.org-1:a7pgxzMz7+chwVL3/pzj6jIBMioiJM7ypFP8PwtkuGc="];
-
         experimental-features = ["nix-command" "flakes" "pipe-operators"];
+        extra-substituters = ["https://noctalia.cachix.org"];
+        extra-trusted-public-keys = ["noctalia.cachix.org-1:pCOR47nnMEo5thcxNDtzWpOxNFQsBRglJzxWPp3dkU4="];
     };
 
     # Allow unfree packages
@@ -166,6 +164,7 @@
         withUWSM = false;
     };
 
+    services.gnome.gnome-keyring.enable = true;
     services.greetd = {
         enable = true;
         settings.default_session = {

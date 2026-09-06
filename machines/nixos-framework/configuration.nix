@@ -155,6 +155,7 @@
         withUWSM = false;
     };
 
+    services.gnome.gnome-keyring.enable = true;
     services.greetd = {
         enable = true;
         settings.default_session = {
