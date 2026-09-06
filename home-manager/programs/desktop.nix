@@ -8,28 +8,15 @@
     # wallpaper = "${pkgs.kdePackages.breeze}/share/wallpapers/Next/contents/images/5120x2880.png";
     wallpaper = "${pkgs.kdePackages.plasma-workspace-wallpapers}/share/wallpapers/ScarletTree/contents/images/5120x2880.png";
 
-    catppuccinMochaRofi = builtins.fetchurl {
-        url = "https://raw.githubusercontent.com/catppuccin/rofi/main/themes/catppuccin-mocha.rasi";
-        sha256 = "0ikn0yc2b9cyzk4xga8mcq1j7xk2idik4wzpsibrphy8qr2pla4b";
-    };
-    catppuccinDefaultRofi = builtins.fetchurl {
-        url = "https://raw.githubusercontent.com/catppuccin/rofi/main/catppuccin-default.rasi";
-        sha256 = "1f3r6yarrykj8cxvi5hblzlr5n8zbncifnxps9xl5gl32w6ysq5z";
-    };
-    rofiCatppuccinTheme = pkgs.writeTextFile {
-        name = "catppuccin-rofi-config";
-        text = ''
-            @import "${catppuccinMochaRofi}"
-            @import "${catppuccinDefaultRofi}"
-        '';
-    };
-
     catppuccinMochaGtk = pkgs.catppuccin-gtk.override {
         variant = "mocha";
         accents = ["blue"];
         size = "standard";
     };
 in {
+    imports = [
+        inputs.noctalia.homeModules.default
+    ];
     home.pointerCursor = {
         enable = true;
         gtk.enable = true;
@@ -62,80 +49,79 @@ in {
             enable = true;
         };
 
-        wayle = {
-            enable = true;
-            autoInstallDependencies = true;
-            settings = {
-                osd.enabled = false;
-                bar = {
-                    layout = [
-                        {
-                            monitor = "*";
-                            left = ["window-title" "hyprland-workspaces"];
-                            center = ["weather" "clock"];
-                            right = ["media" "bluetooth" "network" "volume" "power"];
-                        }
-                    ];
-                    location = "top";
-                    rounding = "none";
-                    scale = 1;
-                };
-                modules = {
-                    window-title = {
-                        label-max-length = 50;
-                    };
-                    hyprland-workspaces = {
-                        app-icons-show = true;
-                    };
-                    weather = {
-                        units = "imperial";
-                        location = "New York";
-                    };
-                    clock = {
-                        format = "%a %e %b | %I:%M %p";
-                        icon-show = false;
-                    };
-                    media = {
-                        label-max-length = 20;
-                    };
-                    bluetooth = {
-                        label-show = false;
-                    };
-                    brightness = {
-                        label-show = false;
-                    };
-                    network = {
-                        label-show = false;
-                    };
-                    volume = {
-                        label-show = false;
-                        scroll-up = "wpctl set-volume @DEFAULT_SINK@ 5%+";
-                        scroll-down = "wpctl set-volume @DEFAULT_SINK@ 5%-";
-                        middle-click = "wpctl set-mute @DEFAULT_SINK@ toggle";
-                    };
-                    power = {
-                        left-click = "shutdown -h now";
-                        right-click = "hyprctl dispatch 'hl.dsp.exit()'";
-                    };
-                };
-            };
-        };
-
-        hyprpaper = {
-            enable = true;
-            settings = {
-                splash = false;
-                preload = [
-                    "${wallpaper}"
-                ];
-                wallpaper = [
-                    {
-                        monitor = "";
-                        path = "${wallpaper}";
-                    }
-                ];
-            };
-        };
+        # wayle = {
+        #     enable = true;
+        #     autoInstallDependencies = true;
+        #     settings = {
+        #         osd.enabled = false;
+        #         bar = {
+        #             layout = [
+        #                 {
+        #                     monitor = "*";
+        #                     left = ["window-title" "hyprland-workspaces"];
+        #                     center = ["weather" "clock"];
+        #                     right = ["media" "bluetooth" "network" "volume" "power"];
+        #                 }
+        #             ];
+        #             location = "top";
+        #             rounding = "none";
+        #             scale = 1;
+        #         };
+        #         modules = {
+        #             window-title = {
+        #                 label-max-length = 50;
+        #             };
+        #             hyprland-workspaces = {
+        #                 app-icons-show = true;
+        #             };
+        #             weather = {
+        #                 units = "imperial";
+        #                 location = "New York";
+        #             };
+        #             clock = {
+        #                 format = "%a %e %b | %I:%M %p";
+        #                 icon-show = false;
+        #             };
+        #             media = {
+        #                 label-max-length = 20;
+        #             };
+        #             bluetooth = {
+        #                 label-show = false;
+        #             };
+        #             brightness = {
+        #                 label-show = false;
+        #             };
+        #             network = {
+        #                 label-show = false;
+        #             };
+        #             volume = {
+        #                 label-show = false;
+        #                 scroll-up = "wpctl set-volume @DEFAULT_SINK@ 5%+";
+        #                 scroll-down = "wpctl set-volume @DEFAULT_SINK@ 5%-";
+        #                 middle-click = "wpctl set-mute @DEFAULT_SINK@ toggle";
+        #             };
+        #             power = {
+        #                 left-click = "shutdown -h now";
+        #                 right-click = "hyprctl dispatch 'hl.dsp.exit()'";
+        #             };
+        #         };
+        #     };
+        # };
+        # hyprpaper = {
+        #     enable = true;
+        #     settings = {
+        #         splash = false;
+        #         preload = [
+        #             "${wallpaper}"
+        #         ];
+        #         wallpaper = [
+        #             {
+        #                 monitor = "";
+        #                 path = "${wallpaper}";
+        #             }
+        #         ];
+        #     };
+        # };
     };
 
     wayland.windowManager.hyprland = {
@@ -309,7 +295,7 @@ in {
                     {_args = ["${mod} + Q" (mkLuaInline ''hl.dsp.window.close()'') {locked = true;}];}
                     {_args = ["${mod} + T" (exec terminal-cmd)];}
                     {_args = ["${mod} + B" (exec browser-cmd)];} # I have this downloaded with a flake its too annoying to grab it from inputs
-                    {_args = ["${mod} + Space" (exec "rofi -show combi")];}
+                    {_args = ["${mod} + Space" (exec "noctalia msg panel-toggle launcher")];}
 
                     # Brightness
                     {_args = ["XF86MonBrightnessUp" (exec "brightnessctl set +5%") {repeating = true;}];}
@@ -472,6 +458,17 @@ in {
 
             on = [
                 {
+                    _args = [
+                        "hyprland.start"
+                        (
+                            mkLuaInline ''
+                                function()
+                                    hl.exec_cmd("noctalia")
+                                end''
+                        )
+                    ];
+                }
+                {
                     # This automatically opens a specific window whenever I go to a specific empty workspace
                     _args = [
                         "workspace.active"
@@ -564,20 +561,68 @@ in {
     };
 
     programs = {
-        rofi = {
+        noctalia = {
             enable = true;
-            terminal = "${pkgs.ghostty}/bin/ghostty";
-            theme = "${rofiCatppuccinTheme}";
-            extraConfig = {
-                modi = "drun,run,calc,combi";
-                combi-modes = "drun,run,calc";
-                show-icons = true;
-                font = "JetBrains Mono 12";
 
-                no-show-match = true;
-                no-sort = true;
+            settings = {
+                wallpaper = {
+                    enabled = true;
+                    default.path = "${wallpaper}";
+                };
+                theme = {
+                    builtin = "Catppuccin";
+                    mode = "dark";
+                    source = "wallpaper";
+                };
+                bar = {
+                    default = {
+                        center = ["group:g1"];
+                        end = [
+                            "media"
+                            "clipboard"
+                            "network"
+                            "bluetooth"
+                            "volume"
+                            "brightness"
+                            "battery"
+                            "control-center"
+                            "session"
+                        ];
+                        start = ["workspaces"];
+                        capsule_group = [
+                            {
+                                accordion = false;
+                                accordion_direction = "end";
+                                enabled = true;
+                                fill = "surface_variant";
+                                id = "g1";
+                                members = ["weather" "clock"];
+                                opacity = 1.0;
+                                padding = 6.0;
+                            }
+                        ];
+                    };
+                };
+
+                desktop_widgets.enabled = false;
+                location.auto_locate = true;
+                lockscreen_widgets.enabled = false;
+                osd.enabled = false;
+
+                weather.unit = "imperial";
+                widget = {
+                    brightness.show_label = false;
+                    clock.format = "{:%a %e %b | %I:%M %p}";
+                    control-center.glyph = "function";
+                    media = {
+                        album_art_only = true;
+                        art_size = 30;
+                        hide_when_no_media = true;
+                    };
+                    network.show_label = false;
+                    volume.show_label = false;
+                };
             };
-            plugins = with pkgs; [rofi-calc];
         };
     };
 }

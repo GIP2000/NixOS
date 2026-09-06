@@ -51,6 +51,7 @@
     programs = {
         git = {
             enable = true;
+            extraConfig.core.editor = "vim";
             includes = [
                 {
                     condition = "gitdir:~/Documents/dev/sante-platform/";
