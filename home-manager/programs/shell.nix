@@ -57,6 +57,10 @@
                     condition = "gitdir:~/Documents/dev/sante-platform/";
                     contents.user.email = "gregory.presser@santehq.com";
                 }
+                {
+                    condition = "gitdir:~/Documents/dev/sante/";
+                    contents.user.email = "gregory.presser@santehq.com";
+                }
             ];
             settings = {
                 user = {
