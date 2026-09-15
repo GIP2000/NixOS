@@ -15,6 +15,7 @@
         MOZ_ENABLE_WAYLAND = "1";
     };
 
+    boot.kernelPackages = pkgs.linuxPackages_latest;
     boot.tmp.cleanOnBoot = true;
 
     # Bootloader.

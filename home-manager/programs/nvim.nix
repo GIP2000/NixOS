@@ -54,6 +54,9 @@
                             },
                         '';
                     };
+                    typescript-go = {
+                        cmd = lib.mkForce ["${lib.getExe pkgs.typescript}" "--lsp" "--stdio"];
+                    };
                 };
             };
 
