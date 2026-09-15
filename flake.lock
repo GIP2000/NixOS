@@ -1,5 +1,21 @@
 {
   "nodes": {
+    "codex-gui": {
+      "inputs": {
+        "nixpkgs": [
+          "nixpkgs"
+        ]
+      },
+      "locked": {
+        "path": "./flakes/codex-gui",
+        "type": "path"
+      },
+      "original": {
+        "path": "./flakes/codex-gui",
+        "type": "path"
+      },
+      "parent": []
+    },
     "flake-compat": {
       "flake": false,
       "locked": {
@@ -164,6 +180,7 @@
     },
     "root": {
       "inputs": {
+        "codex-gui": "codex-gui",
         "helium": "helium",
         "home-manager": "home-manager",
         "nixos-hardware": "nixos-hardware",

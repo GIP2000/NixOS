@@ -21,6 +21,7 @@
             slack
             claude-code
             codex
+            inputs.codex-gui.packages.${pkgs.system}.default
 
             (inputs.helium.mkWebApp {
                 name = "helium-notion-work";
