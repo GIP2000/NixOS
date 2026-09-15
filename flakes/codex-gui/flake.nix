@@ -178,7 +178,7 @@
             preFixup = ''
                 gappsWrapperArgs+=(
                     --add-flags "--ozone-platform-hint=auto"
-                    --suffix PATH : "${pkgs.lib.makeBinPath (with pkgs; [git xdg-utils])}"
+                    --suffix PATH : "${pkgs.lib.makeBinPath (with pkgs; [bubblewrap git xdg-utils])}"
                 )
             '';
 
