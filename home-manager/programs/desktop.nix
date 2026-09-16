@@ -616,7 +616,7 @@ in {
                     control-center.glyph = "function";
                     media = {
                         album_art_only = true;
-                        art_size = 30;
+                        art_size = 20;
                         hide_when_no_media = true;
                     };
                     network.show_label = false;
