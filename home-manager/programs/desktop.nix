@@ -608,6 +608,9 @@ in {
                 location.auto_locate = true;
                 lockscreen_widgets.enabled = false;
                 osd.enabled = false;
+                calendar = {
+                    event_time_format = "%I:%M %p";
+                };
 
                 weather.unit = "imperial";
                 widget = {
