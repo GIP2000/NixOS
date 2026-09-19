@@ -121,6 +121,24 @@
     # Allow unfree packages
     nixpkgs.config.allowUnfree = true;
 
+    # TODO: remove when this is updated
+    # Aquamarine 0.15.1 fixes DRM outputs remaining assigned after disconnect,
+    # which prevents an HDMI display from reconnecting until Hyprland restarts.
+    # Remove this override once nixpkgs packages Aquamarine 0.15.1 or newer.
+    nixpkgs.overlays = [
+        (_final: prev: {
+            aquamarine = prev.aquamarine.overrideAttrs (_oldAttrs: rec {
+                version = "0.15.1";
+                src = prev.fetchFromGitHub {
+                    owner = "hyprwm";
+                    repo = "aquamarine";
+                    tag = "v${version}";
+                    hash = "sha256-jiUl3+k9K+BASO4hvKFhlCMUpHPPoy2q5uZMl3pzOF0=";
+                };
+            });
+        })
+    ];
+
     # List packages installed in system profile. To search, run:
     # $ nix search wget
     environment.systemPackages = with pkgs; [
