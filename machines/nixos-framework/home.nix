@@ -136,7 +136,7 @@
                 scale = 2;
             }
             {
-                output = "DP-1";
+                output = "desc:ASUSTek COMPUTER INC PA278CFRV S5LMYX001888";
                 mode = "2560x1440@99.95Hz";
                 position = "auto";
                 scale = 1;
