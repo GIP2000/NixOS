@@ -89,6 +89,7 @@
                 rust.enable = true;
                 odin.enable = true;
                 nix.enable = true;
+                clang.enable = true;
                 tsx = {
                     enable = true;
                     lsp.servers = ["typescript-go"];
