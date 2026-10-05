@@ -54,8 +54,17 @@
                             },
                         '';
                     };
-                    typescript-go = {
-                        cmd = lib.mkForce ["${lib.getExe pkgs.typescript}" "--lsp" "--stdio"];
+                    vtsls = {
+                        enable = true;
+                        cmd = [(lib.getExe pkgs.vtsls) "--stdio"];
+                        filetypes = [
+                            "javascript"
+                            "javascriptreact"
+                            "typescript"
+                            "typescriptreact"
+                        ];
+                        root_markers = ["tsconfig.json" "jsconfig.json" "package.json" ".git"];
+                        settings.typescript.tsserver.maxTsServerMemory = 8192;
                     };
                 };
             };
@@ -92,7 +101,8 @@
                 clang.enable = true;
                 tsx = {
                     enable = true;
-                    lsp.servers = ["typescript-go"];
+                    # vtsls is configured directly in lsp.servers above.
+                    lsp.servers = [];
                     format = {
                         enable = false;
                         # type = ["biome"];
@@ -104,7 +114,8 @@
                 };
                 typescript = {
                     enable = true;
-                    lsp.servers = ["typescript-go"];
+                    # vtsls is configured directly in lsp.servers above.
+                    lsp.servers = [];
                     # format = {
                     #     enable = true;
                     #     # type = ["biome"];
