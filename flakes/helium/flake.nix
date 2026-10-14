@@ -12,8 +12,8 @@
     }: let
         system = "x86_64-linux";
         pkgs = import nixpkgs {inherit system;};
-        version = "0.16.5.1";
-        hash = "sha256-9hWnc1ZjWENkCGor6T8OeboSOKhWvm3bta73PnyUqXA=";
+        version = "0.19.2.1";
+        hash = "sha256-cHzzGeOj0qoGHKFddUh3vRi4sokghzjIKfywhzvH7Ns=";
     in {
         mkWebApp = {
             name,

@@ -29,5 +29,6 @@ in {
         gnome-sound-recorder
         localsend
         codex
+        pi-coding-agent
     ];
 }
