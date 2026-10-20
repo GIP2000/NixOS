@@ -5,6 +5,40 @@
         bat
         wl-clipboard
         unzip
+
+        (writeShellApplication {
+            name = "gwt";
+            runtimeInputs = [git];
+            text = ''
+                usage() {
+                      echo "Usage: $0 [-b] <name> <base-branch>" >&2
+                      exit 1
+                  }
+
+                  create_branch=false
+
+                  while getopts ":b" flag; do
+                      case "$flag" in
+                          b) create_branch=true ;;
+                          *) usage ;;
+                      esac
+                  done
+
+                  shift "$((OPTIND - 1))"
+                  [[ $# -eq 2 ]] || usage
+
+                  name="$1"
+                  base="$2"
+
+                  args=()
+                  if [[ "$create_branch" == true ]]; then
+                      args=(-b "$name")
+                  fi
+
+                  exec git worktree add "''${args[@]}" "./$name" "$base"
+            '';
+        })
+
         (writeShellApplication {
             name = "tmux-sessionizer";
             runtimeInputs = [fzf];
@@ -51,7 +85,6 @@
     programs = {
         git = {
             enable = true;
-            extraConfig.core.editor = "vim";
             includes = [
                 {
                     condition = "gitdir:~/Documents/dev/sante-platform/";
@@ -63,6 +96,7 @@
                 }
             ];
             settings = {
+                core.editor = "vim";
                 user = {
                     name = "Gregory Presser";
                     email = "gpress2222@gmail.com";
@@ -125,8 +159,10 @@
                 set-option -g default-command ${pkgs.zsh}/bin/zsh
                 set-option -g default-terminal "screen-256color"
 
-                set -g history-limit 10000
+                set -g extended-keys on
+                set -g extended-keys-format csi-u
 
+                set -g history-limit 10000
                 setw -g mouse on
 
                 set-window-option -g mode-keys vi

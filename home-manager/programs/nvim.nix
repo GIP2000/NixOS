@@ -113,6 +113,7 @@
                     };
                 };
                 typescript = {
+                    format.enable = false;
                     enable = true;
                     # vtsls is configured directly in lsp.servers above.
                     lsp.servers = [];
@@ -226,7 +227,8 @@
                 incsearch = true;
 
                 isfname = "@-@";
-                shortmess = "c";
+                # Keep default truncation and suppress file info during Oil navigation.
+                shortmess = "ltToOCFc";
             };
         };
     };
