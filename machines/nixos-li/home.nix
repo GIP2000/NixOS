@@ -9,6 +9,7 @@
         ../../home-manager/programs/desktop.nix
         ../../home-manager/programs/browser.nix
         ../../home-manager/programs/shared-apps.nix
+        ../../home-manager/programs/agents.nix
     ];
 
     home = {
