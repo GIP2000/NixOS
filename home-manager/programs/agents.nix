@@ -20,6 +20,10 @@
         in {
             enable = true;
             settings = {
+                defaultProvider = "openai-codex";
+                defaultModel = "gpt-6-astra";
+                defaultThinkingLevel = "xhigh";
+                tuiMode = "regular";
                 packages = [
                     "${pi-openai-service-tier}"
                 ];
