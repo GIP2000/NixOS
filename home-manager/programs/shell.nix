@@ -46,11 +46,28 @@
                 if [[ $# -eq 2 ]]; then
                     selected=$1
                 else
-                    result=$(  { find ~/ -mindepth 1 -maxdepth 2 -type d ! -regex '.*\..*'; find ~/Documents/dev -mindepth 1 -maxdepth 1 -type d; } | fzf --delimiter '/' --with-nth=-1 --print-query || true)
+                    result=$(
+                        {
+                            find ~/ -mindepth 1 -maxdepth 2 -type d ! -regex '.*\..*' -print0
+                            find ~/Documents/dev -mindepth 1 -maxdepth 1 -type d -print0
+                        } | while IFS= read -r -d "" directory; do
+                            printf '%s\n' "$directory"
+                            if [[ -d "$directory/.bare" ]]; then
+                                find "$directory" -mindepth 1 -maxdepth 1 -type d ! -name '.*'
+                            fi
+                        done | while IFS= read -r directory; do
+                            parent="''${directory%/*}"
+                            name="''${directory##*/}"
+                            if [[ -d "$parent/.bare" ]]; then
+                                name="''${parent##*/}/$name"
+                            fi
+                            printf '%s\t%s\n' "$directory" "$name"
+                        done | fzf --delimiter $'\t' --with-nth=2 --print-query || true
+                    )
                 fi
 
                 query=$(sed -n '1p' <<< "''${result:-}")
-                selected=$(sed -n '2p' <<< "''${result:-}")
+                selected=$(sed -n '2p' <<< "''${result:-}" | cut -f1)
 
                 if [[ -z "''${selected:-}" ]]; then
                     if [[ -z "''${query:-}" ]]; then
