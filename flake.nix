@@ -2,19 +2,15 @@
     description = "NixOS with home-manager btw";
     inputs = {
         nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
-
         nixpkgs-small.url = "github:NixOS/nixpkgs/nixos-unstable-small";
+        nixpkgs-stable.url = "github:NixOS/nixpkgs/nixos-26.05";
 
         home-manager = {
             url = "github:nix-community/home-manager";
             inputs.nixpkgs.follows = "nixpkgs";
         };
 
-        nvf = {
-            url = "github:NotAShelf/nvf";
-            inputs.nixpkgs.follows = "nixpkgs";
-        };
-
+        nvf.url = "github:NotAShelf/nvf";
         nixos-hardware = {
             url = "github:NixOS/nixos-hardware/master";
             inputs.nixpkgs.follows = "nixpkgs";
@@ -42,6 +38,7 @@
     outputs = inputs @ {
         self,
         nixpkgs,
+        nixpkgs-stable,
         home-manager,
         nixos-hardware,
         ...
@@ -92,6 +89,43 @@
                         inherit self;
                     };
                 }
+            ];
+        };
+        nixosConfigurations.installer = nixpkgs-stable.lib.nixosSystem {
+            system = "x86_64-linux";
+            modules = [
+                "${nixpkgs-stable}/nixos/modules/installer/cd-dvd/installation-cd-minimal.nix"
+                ({
+                    pkgs,
+                    lib,
+                    ...
+                }: {
+                    services.openssh = {
+                        enable = true;
+                        settings = {
+                            PermitRootLogin = "yes";
+                            PasswordAuthentication = true;
+                            PermitEmptyPasswords = "yes";
+                        };
+                    };
+
+                    # Let PAM accept empty passwords for sshd
+                    security.pam.services.sshd.allowNullPassword = true;
+
+                    # Root has an empty password (the installer's default, made explicit)
+                    users.users.root.initialHashedPassword = lib.mkForce "";
+
+                    networking.hostName = "nixos-installer";
+
+                    services.avahi = {
+                        enable = true;
+                        nssmdns4 = true;
+                        publish = {
+                            enable = true;
+                            addresses = true;
+                        };
+                    };
+                })
             ];
         };
     };
