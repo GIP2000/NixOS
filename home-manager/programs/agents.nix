@@ -20,7 +20,7 @@
         in {
             enable = true;
             settings = {
-                defaultProvider = "openai-codex";
+                defaultProvider = "openai";
                 defaultModel = "gpt-6-astra";
                 defaultThinkingLevel = "xhigh";
                 tuiMode = "regular";

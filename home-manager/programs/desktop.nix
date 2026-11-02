@@ -141,7 +141,7 @@ in {
             config = {
                 misc = {
                     middle_click_paste = false;
-                    initial_workspace_tracking = 2;
+                    # initial_workspace_tracking = 1;
                     focus_on_activate = true;
                 };
                 input = {
@@ -505,21 +505,21 @@ in {
                                 ${
                                     persitant-workspaces
                                     |> map (val:
-                                    #lua
-                                    ''
-                                        if ws == "${val.ws}" then
-                                            hl.dispatch(
-                                                hl.dsp.exec_cmd(
-                                                    "${val.pkgs-path}",
-                                                    {
-                                                        workspace = ws,
-                                                        no_initial_focus = true,
-                                                        tag = "+auto-open"
-                                                    }
-                                                )
-                                            );
-                                        end
-                                    '')
+                                        #lua
+                                        ''
+                                            if ws == "${val.ws}" then
+                                                hl.dispatch(
+                                                    hl.dsp.exec_cmd(
+                                                        "${val.pkgs-path}",
+                                                        {
+                                                            workspace = ws,
+                                                            no_initial_focus = true,
+                                                            tag = "+auto-open"
+                                                        }
+                                                    )
+                                                );
+                                            end
+                                        '')
                                     |> builtins.concatStringsSep ""
                                 }
                                 end

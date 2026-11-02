@@ -11,7 +11,8 @@
             runtimeInputs = [git];
             text = ''
                 usage() {
-                      echo "Usage: $0 [-b] <name> <base-branch>" >&2
+                      echo "Usage: $0 <branch>" >&2
+                      echo "       $0 -b <name> <base-branch>" >&2
                       exit 1
                   }
 
@@ -25,14 +26,16 @@
                   done
 
                   shift "$((OPTIND - 1))"
-                  [[ $# -eq 2 ]] || usage
-
-                  name="$1"
-                  base="$2"
-
                   args=()
                   if [[ "$create_branch" == true ]]; then
+                      [[ $# -eq 2 ]] || usage
+                      name="$1"
+                      base="$2"
                       args=(-b "$name")
+                  else
+                      [[ $# -eq 1 ]] || usage
+                      name="$1"
+                      base="$1"
                   fi
 
                   exec git worktree add "''${args[@]}" "./$name" "$base"
