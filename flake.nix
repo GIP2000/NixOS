@@ -5,19 +5,19 @@
         nixpkgs-small.url = "github:NixOS/nixpkgs/nixos-unstable-small";
         nixpkgs-stable.url = "github:NixOS/nixpkgs/nixos-26.05";
 
-        llm-agents = {
-            url = "github:numtide/llm-agents.nix";
-            inputs.nixpkgs.follows = "nixpkgs";
-        };
-
         home-manager = {
             url = "github:nix-community/home-manager";
             inputs.nixpkgs.follows = "nixpkgs";
         };
 
-        nvf.url = "github:NotAShelf/nvf";
         nixos-hardware = {
             url = "github:NixOS/nixos-hardware/master";
+            inputs.nixpkgs.follows = "nixpkgs";
+        };
+
+        nvf.url = "github:NotAShelf/nvf";
+        llm-agents = {
+            url = "github:numtide/llm-agents.nix";
             inputs.nixpkgs.follows = "nixpkgs";
         };
 
@@ -27,14 +27,6 @@
                 nixpkgs.follows = "nixpkgs";
             };
         };
-
-        # codex-gui = {
-        #     url = "path:./flakes/codex-gui";
-        #     inputs = {
-        #         nixpkgs.follows = "nixpkgs";
-        #     };
-        # };
-
         noctalia = {
             url = "github:noctalia-dev/noctalia";
             inputs.nixpkgs.follows = "nixpkgs";
