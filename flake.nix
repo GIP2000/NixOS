@@ -92,38 +92,54 @@
             system = "x86_64-linux";
             modules = [
                 "${nixpkgs-stable}/nixos/modules/installer/cd-dvd/installation-cd-minimal.nix"
-                ({
-                    pkgs,
-                    lib,
-                    ...
-                }: {
-                    services.openssh = {
-                        enable = true;
-                        settings = {
-                            PermitRootLogin = "yes";
-                            PasswordAuthentication = true;
-                            PermitEmptyPasswords = "yes";
-                        };
-                    };
-
-                    # Let PAM accept empty passwords for sshd
-                    security.pam.services.sshd.allowNullPassword = true;
-
-                    # Root has an empty password (the installer's default, made explicit)
-                    users.users.root.initialHashedPassword = lib.mkForce "";
-
-                    networking.hostName = "nixos-installer";
-
-                    services.avahi = {
-                        enable = true;
-                        nssmdns4 = true;
-                        publish = {
-                            enable = true;
-                            addresses = true;
-                        };
-                    };
-                })
+                ./installer-common.nix
             ];
         };
+
+        nixosConfigurations.netboot = nixpkgs-stable.lib.nixosSystem {
+            system = "x86_64-linux";
+            modules = [
+                "${nixpkgs-stable}/nixos/modules/installer/netboot/netboot-minimal.nix"
+                ./installer-common.nix
+            ];
+        };
+        # nixosConfigurations.installer = nixpkgs-stable.lib.nixosSystem {
+        #     system = "x86_64-linux";
+        #     modules = [
+        #         "${nixpkgs-stable}/nixos/modules/installer/cd-dvd/installation-cd-minimal.nix"
+        #         ({
+        #             pkgs,
+        #             lib,
+        #             ...
+        #         }: {
+        #             services.openssh = {
+        #                 enable = true;
+        #                 settings = {
+        #                     PermitRootLogin = "yes";
+        #                     PasswordAuthentication = true;
+        #                     PermitEmptyPasswords = "yes";
+        #                 };
+        #             };
+        #
+        #             # Let PAM accept empty passwords for sshd
+        #             security.pam.services.sshd.allowNullPassword = true;
+        #
+        #             # Root has an empty password (the installer's default, made explicit)
+        #             users.users.root.initialHashedPassword = lib.mkForce "";
+        #
+        #             networking.hostName = "nixos-installer";
+        #
+        #             services.avahi = {
+        #                 enable = true;
+        #                 nssmdns4 = true;
+        #                 openFirewall = true;
+        #                 publish = {
+        #                     enable = true;
+        #                     addresses = true;
+        #                 };
+        #             };
+        #         })
+        #     ];
+        # };
     };
 }

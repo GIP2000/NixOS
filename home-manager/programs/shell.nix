@@ -5,6 +5,7 @@
         bat
         wl-clipboard
         unzip
+        lsof
 
         (writeShellApplication {
             name = "gwt";
