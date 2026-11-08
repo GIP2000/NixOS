@@ -10,6 +10,7 @@
     imports = [
         # Include the results of the hardware scan.
         ./hardware-configuration.nix
+        ../../services/pi-hole.nix
     ];
 
     # Use the GRUB 2 boot loader.
@@ -36,9 +37,17 @@
             openssh.authorizedKeys.keys = authorizedKeys;
         };
     };
+    networking = {
+        hostName = "doof";
+        networkmanager.enable = true;
 
-    networking.hostName = "doof";
-    networking.networkmanager.enable = true;
+        interfaces.eno2.ipv4.addresses = [
+            {
+                address = "192.168.1.152";
+                prefixLength = 24;
+            }
+        ];
+    };
 
     # Set your time zone.
     time.timeZone = "America/New_York";
