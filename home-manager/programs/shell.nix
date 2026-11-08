@@ -1,9 +1,7 @@
 {pkgs, ...}: {
     home.packages = with pkgs; [
-        kitty
         zsh-powerlevel10k
         bat
-        wl-clipboard
         unzip
         lsof
 
@@ -129,16 +127,6 @@
             };
         };
 
-        ghostty = {
-            enable = true;
-            settings = {
-                font-size = 20;
-
-                window-padding-x = 0;
-                window-padding-y = 0;
-                window-padding-balance = true;
-            };
-        };
 
         direnv = {
             enable = true;

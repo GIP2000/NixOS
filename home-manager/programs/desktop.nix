@@ -42,6 +42,8 @@ in {
     home.packages = with pkgs; [
         wf-recorder # pkill doesn't work well unless I call it from the path
         satty # I want to use this to open images
+        kitty
+	wl-clipboard
     ];
 
     services = {
@@ -561,6 +563,17 @@ in {
     };
 
     programs = {
+        ghostty = {
+            enable = true;
+            settings = {
+                font-size = 20;
+
+                window-padding-x = 0;
+                window-padding-y = 0;
+                window-padding-balance = true;
+            };
+        };
+
         noctalia = {
             enable = true;
 
