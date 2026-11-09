@@ -74,6 +74,7 @@
         git
         curl
         vim
+        ghostty.terminfo
     ];
 
     system.stateVersion = "26.05";
