@@ -5,8 +5,6 @@
         lists = [
             {
                 url = "https://raw.githubusercontent.com/StevenBlack/hosts/master/hosts";
-                # type = "block";  # default
-                # enabled = true;
             }
         ];
 
@@ -15,8 +13,10 @@
 
         settings = {
             dns = {
+                listeningMode = "ALL";
                 hosts = [
-                    "192.168.1.152 doof.local"
+                    "192.168.1.152 doof.home.arpa"
+                    "100.126.28.122 tail.doof.home.arpa"
                 ];
                 upstreams = [
                     "1.1.1.1"
@@ -30,6 +30,7 @@
                 end = "192.168.1.254";
                 router = "192.168.1.1";
                 leaseTime = "24h";
+                ipv6 = true;
 
                 hosts = [
                     "f0:4d:a2:07:b0:db,192.168.1.152,doof,infinite"

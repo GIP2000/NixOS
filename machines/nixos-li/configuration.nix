@@ -77,6 +77,7 @@
         LC_TIME = "en_US.UTF-8";
     };
 
+    services.tailscale.enable = true;
     # Configure keymap in X11
     services.xserver.xkb = {
         layout = "us";

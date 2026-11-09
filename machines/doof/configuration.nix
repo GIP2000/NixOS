@@ -11,6 +11,7 @@
         # Include the results of the hardware scan.
         ./hardware-configuration.nix
         ../../services/pi-hole.nix
+        ../../services/tailscale.nix
     ];
 
     # Use the GRUB 2 boot loader.
