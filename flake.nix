@@ -4,7 +4,10 @@
         nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
         nixpkgs-small.url = "github:NixOS/nixpkgs/nixos-unstable-small";
         nixpkgs-stable.url = "github:NixOS/nixpkgs/nixos-26.05";
-
+        nix-darwin = {
+            url = "github:nix-darwin/nix-darwin/master";
+            inputs.nixpkgs.follows = "nixpkgs-stable";
+        };
         home-manager = {
             url = "github:nix-community/home-manager";
             inputs.nixpkgs.follows = "nixpkgs";
@@ -44,8 +47,25 @@
         home-manager,
         home-manager-stable,
         nixos-hardware,
+        nix-darwin,
         ...
     }: {
+        darwinConfigurations.monogram = nix-darwin.lib.darwinSystem {
+            system = "aarch64-darwin";
+            specialArgs = {inherit inputs;};
+            modules = [
+                ./machines/monogram/configuration.nix
+                home-manager-stable.darwinModules.home-manager
+                {
+                    home-manager.users.gip = import ./machines/monogram/home.nix;
+                    home-manager.extraSpecialArgs = {
+                        inherit inputs;
+                        inherit self;
+                    };
+                }
+            ];
+        };
+
         nixosConfigurations.doof = nixpkgs-stable.lib.nixosSystem {
             system = "x86_64-linux";
             specialArgs = {inherit inputs;};
