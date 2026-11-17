@@ -59,6 +59,12 @@
                 defaultModel = "gpt-6-astra";
                 defaultThinkingLevel = "xhigh";
                 tuiMode = "regular";
+                extensions = [
+                    "${./workspace-mcp.ts}"
+                ];
+                skills = [
+                    "${./skills/workspace-resources}"
+                ];
                 packages = [
                     "${pi-openai-service-tier}"
                     "${pi-claude-bridge}/lib/node_modules/pi-claude-bridge"
