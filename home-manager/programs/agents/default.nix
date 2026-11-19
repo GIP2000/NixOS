@@ -65,7 +65,7 @@
             enable = true;
             settings = {
                 defaultProvider = "openai";
-                defaultModel = "gpt-6-astra";
+                defaultModel = "gpt-6.2-astra";
                 defaultThinkingLevel = "xhigh";
                 tuiMode = "regular";
                 extensions = [
