@@ -1,4 +1,4 @@
-{pkgs, ...}: {
+{ pkgs, ... }: {
     # Allow unfree packages in standalone commands such as nix-shell -p.
     xdg.configFile."nixpkgs/config.nix".text = ''
         {
@@ -14,7 +14,7 @@
 
         (writeShellApplication {
             name = "gwt";
-            runtimeInputs = [git];
+            runtimeInputs = [ git ];
             text = ''
                 usage() {
                       echo "Usage: $0 <branch>" >&2
@@ -50,7 +50,7 @@
 
         (writeShellApplication {
             name = "tmux-sessionizer";
-            runtimeInputs = [fzf];
+            runtimeInputs = [ fzf ];
             text = ''
                 if [[ $# -eq 2 ]]; then
                     selected=$1
@@ -154,7 +154,7 @@
                             "depth:1"
                         ];
                     }
-                    {name = "zsh-users/zsh-autosuggestions";}
+                    { name = "zsh-users/zsh-autosuggestions"; }
                 ];
             };
             shellAliases = {

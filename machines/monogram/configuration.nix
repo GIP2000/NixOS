@@ -6,7 +6,8 @@
     lib,
     pkgs,
     ...
-}: {
+}:
+{
     # imports = [
     #     # Include the results of the hardware scan.
     #     ../../services/tailscale.nix
@@ -63,7 +64,11 @@
     };
 
     nix.settings = {
-        experimental-features = ["nix-command" "flakes" "pipe-operators"];
+        experimental-features = [
+            "nix-command"
+            "flakes"
+            "pipe-operators"
+        ];
     };
 
     # Allow unfree packages

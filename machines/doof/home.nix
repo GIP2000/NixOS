@@ -2,7 +2,8 @@
     pkgs,
     lib,
     ...
-}: {
+}:
+{
     imports = [
         ../../home-manager/programs/nvim.nix
         ../../home-manager/programs/shell.nix

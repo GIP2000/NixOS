@@ -1,4 +1,4 @@
-{...}: {
+{ ... }: {
     services.pihole-ftl = {
         enable = true;
 
@@ -41,7 +41,7 @@
 
     services.pihole-web = {
         enable = true;
-        ports = [8081];
+        ports = [ 8081 ];
     };
 
     networking.firewall.allowedTCPPorts = [

@@ -1,14 +1,14 @@
 # Edit this configuration file to define what should be installed on
 # your system.  Help is available in the configuration.nix(5) man page
 # and in the NixOS manual (accessible by running ‘nixos-help’).
-{pkgs, ...}: {
+{ pkgs, ... }: {
     imports = [
         # Include the results of the hardware scan.
         ./hardware-configuration.nix
     ];
 
     hardware.graphics.enable = true;
-    services.xserver.videoDrivers = ["nvidia"];
+    services.xserver.videoDrivers = [ "nvidia" ];
     hardware.nvidia = {
         open = false;
         modesetting.enable = true;
@@ -30,7 +30,7 @@
         useOSProber = true;
     };
 
-    boot.kernelParams = ["nvidia-drm.modeset=1"];
+    boot.kernelParams = [ "nvidia-drm.modeset=1" ];
 
     security.wrappers.chrome-sandbox = {
         setuid = true;
@@ -100,7 +100,7 @@
             ln -sf ${pkgs.dejavu_fonts}/share/fonts/truetype/DejaVuSans.ttf \
               /usr/share/fonts/truetype/dejavu/DejaVuSans.ttf
         '';
-        deps = [];
+        deps = [ ];
     };
 
     # Define a user account. Don't forget to set a password with ‘passwd’.
@@ -116,7 +116,11 @@
     users.users.gip = {
         isNormalUser = true;
         description = "Gregory Presser";
-        extraGroups = ["networkmanager" "wheel" "kvm"];
+        extraGroups = [
+            "networkmanager"
+            "wheel"
+            "kvm"
+        ];
         shell = pkgs.zsh;
     };
 
@@ -127,11 +131,15 @@
     };
 
     nix.settings = {
-        substituters = ["https://hyprland.cachix.org"];
-        trusted-substituters = ["https://hyprland.cachix.org"];
-        trusted-public-keys = ["hyprland.cachix.org-1:a7pgxzMz7+chwVL3/pzj6jIBMioiJM7ypFP8PwtkuGc="];
+        substituters = [ "https://hyprland.cachix.org" ];
+        trusted-substituters = [ "https://hyprland.cachix.org" ];
+        trusted-public-keys = [ "hyprland.cachix.org-1:a7pgxzMz7+chwVL3/pzj6jIBMioiJM7ypFP8PwtkuGc=" ];
 
-        experimental-features = ["nix-command" "flakes" "pipe-operators"];
+        experimental-features = [
+            "nix-command"
+            "flakes"
+            "pipe-operators"
+        ];
     };
 
     # Allow unfree packages

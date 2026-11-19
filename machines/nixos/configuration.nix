@@ -1,14 +1,14 @@
 # Edit this configuration file to define what should be installed on
 # your system.  Help is available in the configuration.nix(5) man page
 # and in the NixOS manual (accessible by running ‘nixos-help’).
-{pkgs, ...}: {
+{ pkgs, ... }: {
     imports = [
         # Include the results of the hardware scan.
         ./hardware-configuration.nix
     ];
 
     hardware.graphics.enable = true;
-    services.xserver.videoDrivers = ["nvidia"];
+    services.xserver.videoDrivers = [ "nvidia" ];
     hardware.nvidia = {
         open = false;
         modesetting.enable = true;
@@ -27,7 +27,7 @@
     boot.loader.systemd-boot.enable = true;
     boot.loader.efi.canTouchEfiVariables = true;
 
-    boot.kernelParams = ["nvidia-drm.modeset=1"];
+    boot.kernelParams = [ "nvidia-drm.modeset=1" ];
 
     security.wrappers.chrome-sandbox = {
         setuid = true;
@@ -96,7 +96,7 @@
             ln -sf ${pkgs.dejavu_fonts}/share/fonts/truetype/DejaVuSans.ttf \
               /usr/share/fonts/truetype/dejavu/DejaVuSans.ttf
         '';
-        deps = [];
+        deps = [ ];
     };
 
     # Define a user account. Don't forget to set a password with ‘passwd’.
@@ -112,7 +112,11 @@
     users.users.gip = {
         isNormalUser = true;
         description = "Gregory Presser";
-        extraGroups = ["networkmanager" "wheel" "kvm"];
+        extraGroups = [
+            "networkmanager"
+            "wheel"
+            "kvm"
+        ];
         shell = pkgs.zsh;
     };
 
@@ -123,9 +127,15 @@
     };
 
     nix.settings = {
-        experimental-features = ["nix-command" "flakes" "pipe-operators"];
-        extra-substituters = ["https://noctalia.cachix.org"];
-        extra-trusted-public-keys = ["noctalia.cachix.org-1:pCOR47nnMEo5thcxNDtzWpOxNFQsBRglJzxWPp3dkU4="];
+        experimental-features = [
+            "nix-command"
+            "flakes"
+            "pipe-operators"
+        ];
+        extra-substituters = [ "https://noctalia.cachix.org" ];
+        extra-trusted-public-keys = [
+            "noctalia.cachix.org-1:pCOR47nnMEo5thcxNDtzWpOxNFQsBRglJzxWPp3dkU4="
+        ];
     };
 
     # Allow unfree packages

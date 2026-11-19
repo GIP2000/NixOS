@@ -2,7 +2,8 @@
     pkgs,
     inputs,
     ...
-}: let
+}:
+let
     whatsapp = inputs.helium.packages.x86_64-linux.helium-whatsapp;
     notion-app = inputs.helium.mkWebApp {
         name = "helium-notion";
@@ -10,9 +11,10 @@
         desktopName = "Notion";
         icon = "Notion";
         comment = "Notion note taking applicaiton";
-        categories = ["Office"];
+        categories = [ "Office" ];
     };
-in {
+in
+{
     home.packages = with pkgs; [
         nemo
         discord

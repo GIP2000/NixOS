@@ -2,9 +2,11 @@
     inputs,
     config,
     ...
-}: let
+}:
+let
     helium = inputs.helium.packages.x86_64-linux.helium-browser;
-in {
+in
+{
     home.packages = [
         helium
     ];
@@ -12,11 +14,11 @@ in {
     xdg.mimeApps = {
         enable = true;
         defaultApplications = {
-            "text/html" = ["helium-browser.desktop"];
-            "x-scheme-handler/http" = ["helium-browser.desktop"];
-            "x-scheme-handler/https" = ["helium-browser.desktop"];
-            "x-scheme-handler/about" = ["helium-browser.desktop"];
-            "x-scheme-handler/unknown" = ["helium-browser.desktop"];
+            "text/html" = [ "helium-browser.desktop" ];
+            "x-scheme-handler/http" = [ "helium-browser.desktop" ];
+            "x-scheme-handler/https" = [ "helium-browser.desktop" ];
+            "x-scheme-handler/about" = [ "helium-browser.desktop" ];
+            "x-scheme-handler/unknown" = [ "helium-browser.desktop" ];
         };
     };
 

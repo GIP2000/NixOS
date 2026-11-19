@@ -2,7 +2,8 @@
     pkgs,
     lib,
     ...
-}: {
+}:
+{
     imports = [
         ../../home-manager/programs/nvim.nix
         ../../home-manager/programs/shell.nix
@@ -22,8 +23,8 @@
             (symlinkJoin {
                 # this forces sioyek to run on my IGPU because its messed up on Nvidia
                 name = "sioyek";
-                paths = [sioyek];
-                buildInputs = [makeWrapper];
+                paths = [ sioyek ];
+                buildInputs = [ makeWrapper ];
                 postBuild = ''
                     wrapProgram $out/bin/sioyek \
                       --set __EGL_VENDOR_LIBRARY_FILENAMES ${mesa}/share/glvnd/egl_vendor.d/50_mesa.json
@@ -73,36 +74,38 @@
 
         on = [
             {
-                _args = let
-                    mkLuaInline = lib.generators.mkLuaInline;
-                in [
-                    "monitor.added"
-                    (mkLuaInline ''
-                        function(monitor)
-                            if not monitor.name == "DP-3" then
-                                return;
+                _args =
+                    let
+                        mkLuaInline = lib.generators.mkLuaInline;
+                    in
+                    [
+                        "monitor.added"
+                        (mkLuaInline ''
+                            function(monitor)
+                                if not monitor.name == "DP-3" then
+                                    return;
+                                end
+
+                                -- hl.dispatch(hl.dsp.focus({
+                                --     monitor = "DP-3"
+                                -- }));
+
+                                hl.dispatch(hl.dsp.focus({
+                                    workspace = "10",
+                                    on_current_monitor = true,
+                                }));
+
+
+                                hl.dispatch(hl.dsp.workspace.move({
+                                    workspace = "10",
+                                    monitor = "DP-3",
+                                    follow = true,
+                                }));
+
+
                             end
-
-                            -- hl.dispatch(hl.dsp.focus({
-                            --     monitor = "DP-3"
-                            -- }));
-
-                            hl.dispatch(hl.dsp.focus({
-                                workspace = "10",
-                                on_current_monitor = true,
-                            }));
-
-
-                            hl.dispatch(hl.dsp.workspace.move({
-                                workspace = "10",
-                                monitor = "DP-3",
-                                follow = true,
-                            }));
-
-
-                        end
-                    '')
-                ];
+                        '')
+                    ];
             }
         ];
     };

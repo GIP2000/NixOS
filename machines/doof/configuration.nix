@@ -6,7 +6,8 @@
     lib,
     pkgs,
     ...
-}: {
+}:
+{
     imports = [
         # Include the results of the hardware scan.
         ./hardware-configuration.nix
@@ -24,21 +25,27 @@
 
     services.openssh.enable = true;
 
-    users.users = let
-        authorizedKeys = [
-            "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIA2tLbHGxTYI4Z4qFSiXFQFLlLVkfDDJQpTweLXZ2zNO gpress2222@gmail.com"
-            "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAILfmSL1yGc9HdAOqFcDLDoWxKOAuGXcw2rlG5CmE2GNm gpress2222@gmail.com"
-        ];
-    in {
-        root.openssh.authorizedKeys.keys = authorizedKeys;
-        gip = {
-            isNormalUser = true;
-            description = "Gregory Presser";
-            extraGroups = ["networkmanager" "wheel" "kvm"];
-            shell = pkgs.zsh;
-            openssh.authorizedKeys.keys = authorizedKeys;
+    users.users =
+        let
+            authorizedKeys = [
+                "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIA2tLbHGxTYI4Z4qFSiXFQFLlLVkfDDJQpTweLXZ2zNO gpress2222@gmail.com"
+                "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAILfmSL1yGc9HdAOqFcDLDoWxKOAuGXcw2rlG5CmE2GNm gpress2222@gmail.com"
+            ];
+        in
+        {
+            root.openssh.authorizedKeys.keys = authorizedKeys;
+            gip = {
+                isNormalUser = true;
+                description = "Gregory Presser";
+                extraGroups = [
+                    "networkmanager"
+                    "wheel"
+                    "kvm"
+                ];
+                shell = pkgs.zsh;
+                openssh.authorizedKeys.keys = authorizedKeys;
+            };
         };
-    };
     networking = {
         hostName = "doof";
         networkmanager.enable = true;
@@ -61,7 +68,11 @@
     };
 
     nix.settings = {
-        experimental-features = ["nix-command" "flakes" "pipe-operators"];
+        experimental-features = [
+            "nix-command"
+            "flakes"
+            "pipe-operators"
+        ];
     };
 
     # Allow unfree packages

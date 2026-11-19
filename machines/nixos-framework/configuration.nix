@@ -1,7 +1,7 @@
 # Edit this configuration file to define what should be installed on
 # your system.  Help is available in the configuration.nix(5) man page
 # and in the NixOS manual (accessible by running ‘nixos-help’).
-{pkgs, ...}: {
+{ pkgs, ... }: {
     imports = [
         # Include the results of the hardware scan.
         ./hardware-configuration.nix
@@ -47,8 +47,8 @@
 
     # This is the ports for KDEConnect
     networking.firewall = rec {
-        allowedTCPPorts = [53317];
-        allowedUDPPorts = [53317];
+        allowedTCPPorts = [ 53317 ];
+        allowedUDPPorts = [ 53317 ];
         allowedTCPPortRanges = [
             {
                 from = 1714;
@@ -105,7 +105,11 @@
     users.users.gip = {
         isNormalUser = true;
         description = "Gregory Presser";
-        extraGroups = ["networkmanager" "wheel" "kvm"];
+        extraGroups = [
+            "networkmanager"
+            "wheel"
+            "kvm"
+        ];
         shell = pkgs.zsh;
     };
 
@@ -116,9 +120,15 @@
     };
 
     nix.settings = {
-        experimental-features = ["nix-command" "flakes" "pipe-operators"];
-        extra-substituters = ["https://noctalia.cachix.org"];
-        extra-trusted-public-keys = ["noctalia.cachix.org-1:pCOR47nnMEo5thcxNDtzWpOxNFQsBRglJzxWPp3dkU4="];
+        experimental-features = [
+            "nix-command"
+            "flakes"
+            "pipe-operators"
+        ];
+        extra-substituters = [ "https://noctalia.cachix.org" ];
+        extra-trusted-public-keys = [
+            "noctalia.cachix.org-1:pCOR47nnMEo5thcxNDtzWpOxNFQsBRglJzxWPp3dkU4="
+        ];
     };
 
     # Allow unfree packages

@@ -2,7 +2,8 @@
     pkgs,
     lib,
     ...
-}: {
+}:
+{
     imports = [
         ../../home-manager/programs/nvim.nix
         ../../home-manager/programs/shell.nix
@@ -22,8 +23,8 @@
             (symlinkJoin {
                 # this forces sioyek to run on my IGPU because its messed up on Nvidia
                 name = "sioyek";
-                paths = [sioyek];
-                buildInputs = [makeWrapper];
+                paths = [ sioyek ];
+                buildInputs = [ makeWrapper ];
                 postBuild = ''
                     wrapProgram $out/bin/sioyek \
                       --set __EGL_VENDOR_LIBRARY_FILENAMES ${mesa}/share/glvnd/egl_vendor.d/50_mesa.json
