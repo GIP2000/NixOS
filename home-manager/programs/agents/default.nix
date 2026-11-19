@@ -8,12 +8,10 @@
     in [
         codex
         claude-code
+        libnotify # Provides notify-send for pi-ping when its tmux session is detached.
         llm-agents.claude-desktop
         llm-agents.chatgpt
     ];
-
-    # Ghostty delivers OSC notifications; avoid a duplicate notify-send fallback.
-    home.sessionVariables.PI_PING_DESKTOP_FALLBACK = "false";
 
     programs = {
         pi-coding-agent = let
