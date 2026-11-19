@@ -160,6 +160,7 @@
     };
 
     services.gnome.gnome-keyring.enable = true;
+    security.pam.services.login.enableGnomeKeyring = true;
     services.greetd = {
         enable = true;
         settings.default_session = {

@@ -1,4 +1,11 @@
 {pkgs, ...}: {
+    # Allow unfree packages in standalone commands such as nix-shell -p.
+    xdg.configFile."nixpkgs/config.nix".text = ''
+        {
+            allowUnfree = true;
+        }
+    '';
+
     home.packages = with pkgs; [
         zsh-powerlevel10k
         bat

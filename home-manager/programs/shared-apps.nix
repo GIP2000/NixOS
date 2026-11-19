@@ -16,6 +16,7 @@ in {
     home.packages = with pkgs; [
         nemo
         discord
+        element-desktop
         spotify
         blueman
         playerctl

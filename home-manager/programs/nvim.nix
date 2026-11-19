@@ -21,6 +21,7 @@
             xnoremap = bind "x";
             inoremap = bind "i";
         in {
+            viAlias = false;
             lsp = {
                 enable = true;
                 presets.tailwindcss-language-server.enable = true;
