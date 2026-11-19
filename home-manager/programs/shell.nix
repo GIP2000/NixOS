@@ -134,7 +134,6 @@
             };
         };
 
-
         direnv = {
             enable = true;
             nix-direnv.enable = true;
@@ -170,6 +169,7 @@
         };
         tmux = {
             enable = true;
+            focusEvents = true;
             extraConfig = ''
                 set-option -g default-shell ${pkgs.zsh}/bin/zsh
                 set-option -g default-command ${pkgs.zsh}/bin/zsh
@@ -177,6 +177,8 @@
 
                 set -g extended-keys on
                 set -g extended-keys-format csi-u
+                # Forward Pi notifications even from hidden panes.
+                set -g allow-passthrough all
 
                 set -g history-limit 10000
                 setw -g mouse on

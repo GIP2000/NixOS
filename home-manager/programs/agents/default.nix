@@ -12,6 +12,9 @@
         llm-agents.chatgpt
     ];
 
+    # Ghostty delivers OSC notifications; avoid a duplicate notify-send fallback.
+    home.sessionVariables.PI_PING_DESKTOP_FALLBACK = "false";
+
     programs = {
         pi-coding-agent = let
             pi-claude-bridge = pkgs.buildNpmPackage {
@@ -46,6 +49,12 @@
                     license = pkgs.lib.licenses.mit;
                 };
             };
+            pi-ping = pkgs.fetchFromGitHub {
+                owner = "Bukutsu";
+                repo = "pi-ping";
+                rev = "fe0ccf1697621df837f0358e0b7c1550f39997e7"; # v1.3.6
+                hash = "sha256-ErhhKaU6cb+lFRpYQJB8DsStwtebw9nCVdmAbWt191E=";
+            };
             pi-openai-service-tier = pkgs.fetchFromGitHub {
                 owner = "anirudhmehra";
                 repo = "pi-openai-service-tier";
@@ -66,6 +75,7 @@
                     "${./skills/workspace-resources}"
                 ];
                 packages = [
+                    "${pi-ping}"
                     "${pi-openai-service-tier}"
                     "${pi-claude-bridge}/lib/node_modules/pi-claude-bridge"
                 ];

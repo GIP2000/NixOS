@@ -37,17 +37,14 @@ function findWorkspace(cwd: string): string | undefined {
 
 export default function (pi: ExtensionAPI) {
   const registered = new Set<string>();
-  let generation = 0;
 
   function clearServers() {
-    generation++;
     for (const name of registered) pi.unregisterMcpServer(name);
     registered.clear();
   }
 
-  pi.on("session_start", async (_event, ctx) => {
+  pi.on("session_start", (_event, ctx) => {
     clearServers();
-    const currentGeneration = generation;
     if (!ctx.isProjectTrusted()) return;
 
     try {
@@ -71,38 +68,18 @@ export default function (pi: ExtensionAPI) {
       const servers = Object.entries(config.mcpServers ?? {});
       if (servers.length === 0) return;
 
-      if (!ctx.hasUI) {
-        ctx.ui.notify(
-          `Skipped ${configPath}: interactive approval required.`,
-          "warning",
-        );
-        return;
-      }
-
-      const approved = await ctx.ui.confirm(
-        "Load shared workspace MCP servers?",
-        `${configPath}\n\n` +
-          `Servers: ${servers.map(([name]) => name).join(", ")}\n\n` +
-          "This configuration can execute commands and connect to services.",
-      );
-
-      // Don't register servers if the session ended during confirmation.
-      if (!approved || generation !== currentGeneration) return;
-
       for (const [name, server] of servers) {
         pi.registerMcpServer(name, server);
         registered.add(name);
       }
     } catch (error) {
-      if (generation !== currentGeneration) return;
       clearServers();
       ctx.ui.notify(`Workspace MCP loading failed: ${error}`, "error");
     }
   });
 
-  // Skills are discovered independently of MCP configuration and approval.
-  pi.on("resources_discover", async (_event, ctx) => {
-    const currentGeneration = generation;
+  // Skills are discovered independently of MCP configuration.
+  pi.on("resources_discover", (_event, ctx) => {
     if (!ctx.isProjectTrusted()) return;
 
     try {
@@ -122,27 +99,9 @@ export default function (pi: ExtensionAPI) {
         return;
       }
 
-      if (!ctx.hasUI) {
-        ctx.ui.notify(
-          `Skipped ${skillsPath}: interactive approval required.`,
-          "warning",
-        );
-        return;
-      }
-
-      const approved = await ctx.ui.confirm(
-        "Load shared workspace skills?",
-        `${skillsPath}\n\n` +
-          "Skills add instructions for the model and may include scripts. " +
-          "Only load skills you trust.",
-      );
-
-      if (!approved || generation !== currentGeneration) return;
-
       // Let Pi scan SKILL.md files and register the normal skill commands.
       return { skillPaths: [skillsPath] };
     } catch (error) {
-      if (generation !== currentGeneration) return;
       ctx.ui.notify(`Workspace skills loading failed: ${error}`, "error");
     }
   });
