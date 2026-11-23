@@ -1,53 +1,55 @@
-{ ... }: {
-    services.pihole-ftl = {
-        enable = true;
+{...}: {
+  services.pihole-ftl = {
+    enable = true;
 
-        lists = [
-            {
-                url = "https://raw.githubusercontent.com/StevenBlack/hosts/master/hosts";
-            }
-        ];
-
-        openFirewallDNS = true;
-        openFirewallDHCP = true;
-
-        settings = {
-            dns = {
-                listeningMode = "ALL";
-                hosts = [
-                    "192.168.1.152 doof.home.arpa"
-                    "100.126.28.122 tail.doof.home.arpa"
-                    "192.168.1.119 monogram.home.arpa"
-                    "100.76.184.17 tail.monogram.home.arpa"
-                ];
-                upstreams = [
-                    "1.1.1.1"
-                    "9.9.9.9"
-                ];
-            };
-
-            dhcp = {
-                active = true;
-                start = "192.168.1.2";
-                end = "192.168.1.254";
-                router = "192.168.1.1";
-                leaseTime = "24h";
-                ipv6 = true;
-
-                hosts = [
-                    "f0:4d:a2:07:b0:db,192.168.1.152,doof,infinite"
-                    "9c:76:0e:3b:7e:97,192.168.1.119,monogram,infinite"
-                ];
-            };
-        };
-    };
-
-    services.pihole-web = {
-        enable = true;
-        ports = [ 8081 ];
-    };
-
-    networking.firewall.allowedTCPPorts = [
-        8081
+    lists = [
+      {
+        url = "https://raw.githubusercontent.com/StevenBlack/hosts/master/hosts";
+      }
     ];
+
+    openFirewallDNS = true;
+    openFirewallDHCP = true;
+
+    settings = {
+      dns = {
+        listeningMode = "ALL";
+        hosts = [
+          "192.168.1.152 doof.home.arpa"
+          "192.168.1.25 idrac.doof.home.arpa"
+          "100.126.28.122 tail.doof.home.arpa"
+          "192.168.1.119 monogram.home.arpa"
+          "100.76.184.17 tail.monogram.home.arpa"
+        ];
+        upstreams = [
+          "1.1.1.1"
+          "9.9.9.9"
+        ];
+      };
+
+      dhcp = {
+        active = true;
+        start = "192.168.1.2";
+        end = "192.168.1.254";
+        router = "192.168.1.1";
+        leaseTime = "24h";
+        ipv6 = true;
+
+        hosts = [
+          "f0:4d:a2:07:b0:db,192.168.1.152,doof,infinite"
+          "9c:76:0e:3b:7e:97,192.168.1.119,monogram,infinite"
+          "f0:4d:a2:07:b0:e1,192.168.1.25,idrac-G2P0MN1,infinite"
+        ];
+      };
+    };
+  };
+
+  services.pihole-web = {
+    enable = true;
+    ports = [8081];
+  };
+
+  networking.firewall.allowedTCPPorts = [
+    8081
+  ];
 }
