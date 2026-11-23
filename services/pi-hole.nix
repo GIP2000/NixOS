@@ -17,6 +17,8 @@
                 hosts = [
                     "192.168.1.152 doof.home.arpa"
                     "100.126.28.122 tail.doof.home.arpa"
+                    "192.168.1.119 monogram.home.arpa"
+                    "100.76.184.17 tail.monogram.home.arpa"
                 ];
                 upstreams = [
                     "1.1.1.1"
@@ -34,6 +36,7 @@
 
                 hosts = [
                     "f0:4d:a2:07:b0:db,192.168.1.152,doof,infinite"
+                    "9c:76:0e:3b:7e:97,192.168.1.119,monogram,infinite"
                 ];
             };
         };
