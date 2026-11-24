@@ -151,6 +151,7 @@ in
                         focus_on_activate = true;
                     };
                     input = {
+                        kb_options = "caps:escape";
                         repeat_delay = 300;
                         repeat_rate = 30;
                         touchpad = {
@@ -159,6 +160,14 @@ in
                         };
                     };
                 };
+
+                device = [
+                    {
+                        # Keep the Kinesis firmware's key mapping instead of applying caps:escape.
+                        name = "kinesis-corporation-adv360-pro-keyboard";
+                        kb_options = "";
+                    }
+                ];
 
                 gesture = [
                     {

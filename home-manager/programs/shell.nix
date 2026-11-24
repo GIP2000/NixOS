@@ -11,6 +11,7 @@
         bat
         unzip
         lsof
+        github-cli
 
         (writeShellApplication {
             name = "gwt";
@@ -194,9 +195,9 @@
                 bind w split-window -v
 
                 bind -T copy-mode-vi v send -X begin-selection
-                bind -T copy-mode-vi y send-keys -X copy-pipe-and-cancel "pbcopy"
+                bind -T copy-mode-vi y send-keys -X copy-pipe-and-cancel "wl-copy"
                 bind P paste-buffer
-                bind -T copy-mode-vi MouseDragEnd1Pane send-keys -X copy-pipe-and-cancel "pbcopy"
+                bind -T copy-mode-vi MouseDragEnd1Pane send-keys -X copy-pipe-and-cancel "wl-copy"
 
                 bind-key f display-popup -E "tmux-sessionizer"
             '';

@@ -158,7 +158,7 @@
             }
             {
                 output = "";
-                mode = "preferred";
+                mode = "highres";
                 position = "auto";
                 scale = 1;
             }
@@ -172,10 +172,6 @@
             {
                 name = "1343-touchpad";
                 sensitivity = -0.5;
-            }
-            {
-                name = "at-translated-set-2-keyboard";
-                kb_options = "caps:escape";
             }
         ];
     };
