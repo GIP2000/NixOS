@@ -13,6 +13,7 @@
         ./hardware-configuration.nix
         ../../services/pi-hole.nix
         ../../services/tailscale.nix
+        ../../services/minecraft.nix
     ];
 
     # Use the GRUB 2 boot loader.
@@ -47,8 +48,17 @@
             };
         };
     networking = {
+        nat = {
+            enable = true;
+            internalInterfaces = [ "ve-+" ];
+            externalInterface = "eno1";
+        };
         hostName = "doof";
-        networkmanager.enable = true;
+        networkmanager = {
+            enable = true;
+            unmanaged = [ "interface-name:ve-*" ];
+
+        };
 
         interfaces.eno2.ipv4.addresses = [
             {
