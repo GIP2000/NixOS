@@ -19,9 +19,9 @@
         homeDirectory = "/home/gip";
         stateVersion = "25.11";
         packages = with pkgs; [
+            prismlauncher
             sioyek
             slack
-
             (inputs.helium.mkWebApp {
                 name = "helium-notion-work";
                 url = "https://app.notion.com/";

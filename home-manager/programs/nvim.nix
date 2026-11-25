@@ -10,6 +10,11 @@
     ];
 
     home.packages = [ pkgs.ripgrep ];
+    home.sessionVariables = {
+        EDITOR = "nvim";
+        VISUAL = "nvim";
+    };
+
     programs.nvf = {
         enable = true;
 
