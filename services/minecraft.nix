@@ -1,4 +1,12 @@
-{ ... }: {
+{ inputs, pkgs, ... }:
+
+let
+    unstable = import inputs.nixpkgs {
+        system = pkgs.stdenv.hostPlatform.system;
+        config.allowUnfree = true;
+    };
+in
+{
     containers.minecraft = {
         autoStart = true;
         privateNetwork = true; # no shared host network, nothing exposed
@@ -23,6 +31,7 @@
             services.tailscale.enable = true;
             services.minecraft-server = {
                 enable = true;
+                package = unstable.minecraftServers.vanilla-26-3;
                 eula = true;
                 jvmOpts = "-Xms6G -Xmx6G";
 
