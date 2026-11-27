@@ -241,6 +241,22 @@
         "type": "github"
       }
     },
+    "nixpkgs-bluebubbles": {
+      "locked": {
+        "lastModified": 1795040869,
+        "narHash": "sha256-sY9UkyfG+5bQ+negtvqFacEEBk5Bl4PphxLgJxgxO4U=",
+        "owner": "GIP2000",
+        "repo": "nixpkgs",
+        "rev": "1e391dc58f2bd82d50e4c5f89d5d39ee9eff28b9",
+        "type": "github"
+      },
+      "original": {
+        "owner": "GIP2000",
+        "ref": "bluebubbles-udpate-ffmpeg-kit-hash",
+        "repo": "nixpkgs",
+        "type": "github"
+      }
+    },
     "nixpkgs-small": {
       "locked": {
         "lastModified": 1795403596,
@@ -336,6 +352,7 @@
         "nix-darwin": "nix-darwin",
         "nixos-hardware": "nixos-hardware",
         "nixpkgs": "nixpkgs",
+        "nixpkgs-bluebubbles": "nixpkgs-bluebubbles",
         "nixpkgs-small": "nixpkgs-small",
         "nixpkgs-stable": "nixpkgs-stable",
         "noctalia": "noctalia",

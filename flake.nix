@@ -2,6 +2,7 @@
   description = "NixOS with home-manager btw";
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
+    nixpkgs-bluebubbles.url = "github:GIP2000/nixpkgs/bluebubbles-udpate-ffmpeg-kit-hash";
     nixpkgs-small.url = "github:NixOS/nixpkgs/nixos-unstable-small";
     nixpkgs-stable.url = "github:NixOS/nixpkgs/nixos-26.05";
     nix-darwin = {
