@@ -13,7 +13,7 @@
 
     };
 
-    flake.modules.hoemManager.rpcs3 = { pkgs, ... }: {
+    flake.modules.homeManager.rpcs3 = { pkgs, ... }: {
         home.packages = [ pkgs.rpcs3 ];
     };
 }

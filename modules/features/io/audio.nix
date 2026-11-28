@@ -24,7 +24,7 @@
         home-manager.sharedModules = [ m.homeManager.audio ];
     };
 
-    flake.modules.homeManager.audio = { pkgs }: {
+    flake.modules.homeManager.audio = { pkgs, ... }: {
         home.packages = with pkgs; [
             playerctl
             pwvucontrol

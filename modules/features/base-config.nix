@@ -26,8 +26,10 @@ let
 in
 {
     flake.modules.darwin.base-config =
-        self@{ pkgs, ... }:
+        { pkgs, ... }:
         {
+            imports = [ common ];
+
             system.primaryuser = "gip";
             users.users = {
                 gip = {
@@ -67,11 +69,12 @@ in
             system.defaults.loginwindow.GuestEnabled = false;
 
             system.stateVersion = 7;
-        }
-        ++ common self;
+        };
     flake.modules.nixos.base-config =
-        self@{ pkgs, ... }:
+        { pkgs, ... }:
         {
+
+            imports = [ common ];
             programs.nix-ld.enable = true;
             users.users.gip = {
                 isNormalUser = true;
@@ -124,6 +127,5 @@ in
                     "noctalia.cachix.org-1:pCOR47nnMEo5thcxNDtzWpOxNFQsBRglJzxWPp3dkU4="
                 ];
             };
-        }
-        ++ common self;
+        };
 }

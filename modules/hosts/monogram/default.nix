@@ -1,7 +1,7 @@
 { inputs, m, ... }: {
     flake.darwinConfigurations.monogram = inputs.nix-darwin.lib.darwinSystem {
         modules = with m.darwin; [
-            inputs.home-manager.nixosModules.home-manager
+            inputs.home-manager-stable.darwinModules.home-manager
             tui-cli
             m.homeManager.bluebubbles-server
         ];

@@ -8,10 +8,10 @@
             gui
             tui-cli
             auth
-            agents
+            m.homeManager.agents
             laptop
-            minecraft-client
-            work
+            m.homeManager.minecraft-client
+            m.homeManager.work
             nixos-framework
             battery
         ];
@@ -30,7 +30,7 @@
 
     };
     flake.modules.homeManager.nixos-framework = { lib, ... }: {
-        ghostty.settings.font-size = lib.mkForce 13;
+        programs.ghostty.settings.font-size = lib.mkForce 13;
     };
 
 }

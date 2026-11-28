@@ -8,7 +8,7 @@
             gui
             tui-cli
             greetd
-            agents
+            m.homeManager.agents
             gaming
         ];
     };

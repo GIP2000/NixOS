@@ -4,7 +4,6 @@
             pkgs,
             lib,
             config,
-            hl ? null,
             ...
         }:
         {
@@ -13,7 +12,7 @@
                 enable = true;
                 settings.default_session = {
                     command =
-                        if hl == null then
+                        if !config.programs.hyprland.enable then
                             "${pkgs.tuigreet}/bin/tuigreet --time --remember"
                         else
                             "${pkgs.tuigreet}/bin/tuigreet --time --remember --cmd ${pkgs.hyprland}/bin/start-hyprland";

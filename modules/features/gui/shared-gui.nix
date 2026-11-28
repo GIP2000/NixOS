@@ -28,11 +28,11 @@
             };
         in
         {
-            imports = with m.nixos m.homeManager; [
+            imports = with m.nixos; [
                 firefox
                 localsend
                 kde-connect
-                sioyek
+                m.homeManager.sioyek
             ];
 
             home.packages = with pkgs; [
