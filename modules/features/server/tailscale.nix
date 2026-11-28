@@ -1,5 +1,5 @@
 { ... }: {
-    flake.modules.nixos.tailscalce = {
+    flake.modules.nixos.tailscale = {
         services.tailscale = {
             enable = true;
             extraUpFlags = [ "--ssh" ];

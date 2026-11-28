@@ -1,10 +1,10 @@
 { inputs, m, ... }: {
-    flake.nixosConfigurations.doof = inputs.nixpkgs.lib.nixosSystem {
+    flake.nixosConfigurations.doof = inputs.nixpkgs-stable.lib.nixosSystem {
         modules = with m.nixos; [
             ./_hardware-configuration.nix
-            inputs.home-manager.nixosModules.home-manager
+            inputs.home-manager-stable.nixosModules.home-manager
             base-config
-            io
+            networking
             tui-cli
             greetd
             server
@@ -38,6 +38,7 @@
         };
 
         system.stateVersion = "26.05";
+        home-manager.users.gip.home.stateVersion = "26.05";
 
     };
 }

@@ -8,6 +8,7 @@ let
             useUserPackages = true;
             useGlobalPkgs = true;
             backupFileExtension = "backup";
+            users.gip = { };
         };
 
         environment.systemPackages = with pkgs; [

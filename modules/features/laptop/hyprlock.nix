@@ -1,7 +1,6 @@
 { m, shared, ... }: {
     flake.modules.nixos.hyprlock = { pkgs, config, ... }: {
-        security.pam.services.hyprlock.fprintAuth = config.security.pam.services.login.fprintAuth;
-
+        security.pam.services.hyprlock.fprintAuth = false;
         home-manager.sharedModules = [ m.homeManager.hyprlock ];
     };
     flake.modules.homeManager.hyprlock =

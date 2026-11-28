@@ -306,20 +306,6 @@
                                 # }
 
                                 # Brightness
-                                {
-                                    _args = [
-                                        "XF86MonBrightnessUp"
-                                        (exec "brightnessctl set +5%")
-                                        { repeating = true; }
-                                    ];
-                                }
-                                {
-                                    _args = [
-                                        "XF86MonBrightnessDown"
-                                        (exec "brightnessctl set 5%-")
-                                        { repeating = true; }
-                                    ];
-                                }
 
                                 # Media Controls
                                 {

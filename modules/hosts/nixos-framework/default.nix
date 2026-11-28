@@ -3,15 +3,13 @@
         modules = with m.nixos; [
             ./_hardware-configuration.nix
             inputs.home-manager.nixosModules.home-manager
+            inputs.nixos-hardware.nixosModules.framework-intel-core-ultra-series3
             base-config
             io
             gui
             tui-cli
             auth
-            m.homeManager.agents
             laptop
-            m.homeManager.minecraft-client
-            m.homeManager.work
             nixos-framework
             battery
         ];
@@ -26,7 +24,13 @@
         services.fwupd.enable = true;
         system.stateVersion = "25.11";
 
-        home-manager.sharedModules = [ m.homeManager.nixos-framework ];
+        home-manager.users.gip.home.stateVersion = "25.11";
+        home-manager.sharedModules = with m.homeManager; [
+            nixos-framework
+            minecraft-client
+            work
+            agents
+        ];
 
     };
     flake.modules.homeManager.nixos-framework = { lib, ... }: {

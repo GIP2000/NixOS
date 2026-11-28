@@ -7,7 +7,7 @@
             ...
         }:
         {
-            security.pam.services.geetd.fprintAuth = config.security.pam.services.login.fprintAuth;
+            security.pam.services.greetd.fprintAuth = config.security.pam.services.login.fprintAuth;
             services.greetd = {
                 enable = true;
                 settings.default_session = {

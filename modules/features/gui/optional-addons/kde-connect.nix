@@ -13,7 +13,7 @@
         home-manager.sharedModules = [ m.homeManager.kde-connect ];
     };
 
-    flake.modules.homeManger.kde-connect = { pkgs, ... }: {
+    flake.modules.homeManager.kde-connect = { pkgs, ... }: {
         services.kdeconnect.enable = true;
 
     };

@@ -1,5 +1,5 @@
 { ... }: {
-    flake.modules.nixos.steeam = { pkgs, ... }: {
+    flake.modules.nixos.steam = { pkgs, ... }: {
         hardware.steam-hardware.enable = true;
 
         programs.steam = {
