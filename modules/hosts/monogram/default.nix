@@ -3,8 +3,8 @@
         modules = with m.darwin; [
             inputs.home-manager-stable.darwinModules.home-manager
             tui-cli
-            m.homeManager.bluebubbles-server
         ];
+        home-manager.sharedModules = [ m.homeManager.bluebubbles-server ];
     };
     flake.modules.darwin.monogram = { pkgs, ... }: {
         services.tailscale.enable = true;
