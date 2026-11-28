@@ -5,8 +5,16 @@
             adwaita-icon-theme
             gnome-themes-extra
         ];
+        imports = with m.nixos; [
+            firefox
+            localsend
+            kde-connect
+        ];
 
-        home-manager.sharedModules = [ m.homeManager.shared-gui ];
+        home-manager.sharedModules = [
+            m.homeManager.shared-gui
+            m.homeManager.sioyek
+        ];
     };
 
     flake.modules.homeManager.shared-gui =
@@ -28,26 +36,16 @@
             };
         in
         {
-            imports = with m.nixos; [
-                firefox
-                localsend
-                kde-connect
-                m.homeManager.sioyek
-            ];
-
             home.packages = with pkgs; [
                 nemo
                 discord
                 element-desktop
                 spotify
-                blueman
-                pwvucontrol
-                whatsapp
+                inputs.helium.packages.${pkgs.stdenv.hostPlatform.system}.helium-whatsapp
                 bluebubbles
                 notion-app
                 vlc
                 gnome-sound-recorder
-                localsend
                 kitty
             ];
 

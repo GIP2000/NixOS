@@ -8,7 +8,7 @@
         home-manager.sharedModules = [ m.homeManager.localsend ];
     };
 
-    flake.modules.homeManger.localsend = { pkgs, ... }: {
+    flake.modules.homeManager.localsend = { pkgs, ... }: {
         home.packages = [ pkgs.localsend ];
 
     };

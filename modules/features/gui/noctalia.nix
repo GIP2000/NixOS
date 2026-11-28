@@ -11,6 +11,13 @@
         security.pam.services.login.enableGnomeKeyring = true;
 
         # I don't know if this is requried still
+
+        nix.settings = {
+            extra-substituters = [ "https://noctalia.cachix.org" ];
+            extra-trusted-public-keys = [
+                "noctalia.cachix.org-1:pCOR47nnMEo5thcxNDtzWpOxNFQsBRglJzxWPp3dkU4="
+            ];
+        };
         programs.dconf.enable = true;
         home-manager.sharedModules = [ m.homeManager.noctalia ];
     };

@@ -10,8 +10,8 @@
             tui-cli
             auth
             laptop
-            nixos-framework
             battery
+            nixos-framework
         ];
     };
     flake.modules.nixos.nixos-framework = { pkgs, ... }: {

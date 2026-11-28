@@ -12,6 +12,7 @@ let
         };
 
         environment.systemPackages = with pkgs; [
+            git
             vim
         ];
 
@@ -31,7 +32,8 @@ in
         {
             imports = [ common ];
 
-            system.primaryuser = "gip";
+            system.primaryUser = "gip";
+
             users.users = {
                 gip = {
                     home = "/Users/gip";
@@ -122,11 +124,5 @@ in
             ];
 
             nixpkgs.config.allowUnfree = true;
-            nix.settings = {
-                extra-substituters = [ "https://noctalia.cachix.org" ];
-                extra-trusted-public-keys = [
-                    "noctalia.cachix.org-1:pCOR47nnMEo5thcxNDtzWpOxNFQsBRglJzxWPp3dkU4="
-                ];
-            };
         };
 }

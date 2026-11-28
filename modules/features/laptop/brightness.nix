@@ -12,23 +12,22 @@
             ...
         }:
         {
-            wayland.windowManager.hyprland.settings.bind =
-                lib.mkIf hl != null [
-                    {
-                        _args = [
-                            "XF86MonBrightnessUp"
-                            (hl.exec "brightnessctl set +5%")
-                            { repeating = true; }
-                        ];
-                    }
-                    {
-                        _args = [
-                            "XF86MonBrightnessDown"
-                            (hl.exec "brightnessctl set 5%-")
-                            { repeating = true; }
-                        ];
-                    }
-                ];
+            wayland.windowManager.hyprland.settings.bind = lib.mkIf (hl != null) [
+                {
+                    _args = [
+                        "XF86MonBrightnessUp"
+                        (hl.exec "brightnessctl set +5%")
+                        { repeating = true; }
+                    ];
+                }
+                {
+                    _args = [
+                        "XF86MonBrightnessDown"
+                        (hl.exec "brightnessctl set 5%-")
+                        { repeating = true; }
+                    ];
+                }
+            ];
 
         };
 

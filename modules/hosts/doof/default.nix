@@ -6,8 +6,8 @@
             base-config
             networking
             tui-cli
-            greetd
             server
+            doof
         ];
     };
     flake.modules.nixos.doof = { pkgs, ... }: {

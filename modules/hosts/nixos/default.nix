@@ -10,6 +10,7 @@
             greetd
             gaming
             nvidia
+            nixos
         ];
     };
     flake.modules.nixos.nixos = { pkgs, ... }: {
