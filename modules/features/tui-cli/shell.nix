@@ -1,0 +1,213 @@
+{ m, ... }:
+let
+    common = { pkgs, ... }: {
+        programs.zsh.enable = true;
+        users.users.gip.shell = pkgs.zsh;
+        home-manager.sharedModules = [ m.homeManager.shell ];
+    };
+in
+{
+    flake.modules.darwin.shell = common;
+    flake.modules.nixos.shell = common;
+    flake.modules.homeManager.shell = { pkgs, ... }: {
+        # Allow unfree packages in standalone commands such as nix-shell -p.
+        home.packages = with pkgs; [
+            ffmpeg
+            zsh-powerlevel10k
+            bat
+            unzip
+            lsof
+            github-cli
+
+            (writeShellApplication {
+                name = "gwt";
+                runtimeInputs = [ git ];
+                text = ''
+                    usage() {
+                          echo "Usage: $0 <branch>" >&2
+                          echo "       $0 -b <name> <base-branch>" >&2
+                          exit 1
+                      }
+
+                      create_branch=false
+
+                      while getopts ":b" flag; do
+                          case "$flag" in
+                              b) create_branch=true ;;
+                              *) usage ;;
+                          esac
+                      done
+
+                      shift "$((OPTIND - 1))"
+                      args=()
+                      if [[ "$create_branch" == true ]]; then
+                          [[ $# -eq 2 ]] || usage
+                          name="$1"
+                          base="$2"
+                          args=(-b "$name")
+                      else
+                          [[ $# -eq 1 ]] || usage
+                          name="$1"
+                          base="$1"
+                      fi
+
+                      exec git worktree add "''${args[@]}" "./$name" "$base"
+                '';
+            })
+
+            (writeShellApplication {
+                name = "tmux-sessionizer";
+                runtimeInputs = [ fzf ];
+                text = ''
+                    if [[ $# -eq 2 ]]; then
+                        selected=$1
+                    else
+                        result=$(
+                            {
+                                find ~/ -mindepth 1 -maxdepth 2 -type d ! -regex '.*\..*' -print0
+                                find ~/Documents/dev -mindepth 1 -maxdepth 1 -type d -print0
+                            } | while IFS= read -r -d "" directory; do
+                                printf '%s\n' "$directory"
+                                if [[ -d "$directory/.bare" ]]; then
+                                    find "$directory" -mindepth 1 -maxdepth 1 -type d ! -name '.*'
+                                fi
+                            done | while IFS= read -r directory; do
+                                parent="''${directory%/*}"
+                                name="''${directory##*/}"
+                                if [[ -d "$parent/.bare" ]]; then
+                                    name="''${parent##*/}/$name"
+                                fi
+                                printf '%s\t%s\n' "$directory" "$name"
+                            done | fzf --delimiter $'\t' --with-nth=2 --print-query || true
+                        )
+                    fi
+
+                    query=$(sed -n '1p' <<< "''${result:-}")
+                    selected=$(sed -n '2p' <<< "''${result:-}" | cut -f1)
+
+                    if [[ -z "''${selected:-}" ]]; then
+                        if [[ -z "''${query:-}" ]]; then
+                            printf "No query provided, aborting\n"
+                            exit 1
+                        fi
+
+                        selected="$HOME/Documents/dev/$query"
+                        mkdir -p "$selected"
+                    fi
+
+                    selected_name=$(basename "$selected" | tr . _)
+                    tmux_running=$(pgrep tmux)
+
+                    if [[ -z ''${TMUX:-} ]] && [[ -z "''${tmux_running:-}" ]]; then
+                        tmux new-session -s "$selected_name" -c "$selected"
+                        exit 0
+                    fi
+
+                    if ! tmux has-session -t="$selected_name" 2> /dev/null; then
+                        tmux new-session -ds "$selected_name" -c "$selected"
+                    fi
+
+                    if [[ "''${TMUX:-}" == "" ]]; then
+                        tmux attach-session -t "$selected_name"
+                    else
+                        tmux switch-client -t "$selected_name"
+                    fi
+                '';
+            })
+        ];
+        programs = {
+            git = {
+                enable = true;
+                includes = [
+                    {
+                        condition = "gitdir:~/Documents/dev/sante-platform/";
+                        contents.user.email = "gregory.presser@santehq.com";
+                    }
+                    {
+                        condition = "gitdir:~/Documents/dev/sante/";
+                        contents.user.email = "gregory.presser@santehq.com";
+                    }
+                ];
+                settings = {
+                    core.editor = "vim";
+                    user = {
+                        name = "Gregory Presser";
+                        email = "gpress2222@gmail.com";
+                    };
+
+                    safe.directory = "/etc/nixos";
+                    push.autoSetupRemote = true;
+                    init.defaultBranch = "main";
+                };
+            };
+
+            direnv = {
+                enable = true;
+                nix-direnv.enable = true;
+                enableZshIntegration = true;
+                stdlib = ''
+                    use flake
+                '';
+            };
+            zsh = {
+                enable = true;
+                zplug = {
+                    enable = true;
+                    plugins = [
+                        {
+                            name = "romkatv/powerlevel10k";
+                            tags = [
+                                "as:theme"
+                                "depth:1"
+                            ];
+                        }
+                        { name = "zsh-users/zsh-autosuggestions"; }
+                    ];
+                };
+                shellAliases = {
+                    vim = "nvim";
+                    ts = "tmux-sessionizer";
+                };
+                initContent = ''
+                    [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
+                                export DIRENV_LOG_FORMAT="%s"
+                                export DIRENV_CONFIG="$HOME/.config/direnv"
+                '';
+            };
+            tmux = {
+                enable = true;
+                focusEvents = true;
+                extraConfig = ''
+                    set-option -g default-shell ${pkgs.zsh}/bin/zsh
+                    set-option -g default-command ${pkgs.zsh}/bin/zsh
+                    set-option -g default-terminal "screen-256color"
+
+                    set -g extended-keys on
+                    set -g extended-keys-format csi-u
+                    # Forward Pi notifications even from hidden panes.
+                    set -g allow-passthrough all
+
+                    set -g history-limit 10000
+                    setw -g mouse on
+
+                    set-window-option -g mode-keys vi
+
+                    bind h select-pane -L
+                    bind j select-pane -D
+                    bind k select-pane -U
+                    bind l select-pane -R
+
+                    bind v split-window -h
+                    bind w split-window -v
+
+                    bind -T copy-mode-vi v send -X begin-selection
+                    bind -T copy-mode-vi y send-keys -X copy-pipe-and-cancel "wl-copy"
+                    bind P paste-buffer
+                    bind -T copy-mode-vi MouseDragEnd1Pane send-keys -X copy-pipe-and-cancel "wl-copy"
+
+                    bind-key f display-popup -E "tmux-sessionizer"
+                '';
+            };
+        };
+    };
+}

@@ -19,7 +19,7 @@
         stateVersion = "25.11";
         packages = with pkgs; [
             prismlauncher
-            rpcs3 # removed since its bugged as hell
+            rpcs3
             (symlinkJoin {
                 # this forces sioyek to run on my IGPU because its messed up on Nvidia
                 name = "sioyek";

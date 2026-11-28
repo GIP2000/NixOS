@@ -7,6 +7,7 @@ let
     };
 in
 {
+
     containers.minecraft = {
         autoStart = true;
         privateNetwork = true; # no shared host network, nothing exposed

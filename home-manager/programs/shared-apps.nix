@@ -5,10 +5,11 @@
 }:
 let
     whatsapp = inputs.helium.packages.x86_64-linux.helium-whatsapp;
-    bluebubbles = (import inputs.nixpkgs-bluebubbles {
-        system = pkgs.stdenv.hostPlatform.system;
-        config.allowUnfree = pkgs.config.allowUnfree;
-    }).bluebubbles;
+    bluebubbles =
+        (import inputs.nixpkgs-bluebubbles {
+            system = pkgs.stdenv.hostPlatform.system;
+            config.allowUnfree = pkgs.config.allowUnfree;
+        }).bluebubbles;
     notion-app = inputs.helium.mkWebApp {
         name = "helium-notion";
         url = "https://app.notion.com/";

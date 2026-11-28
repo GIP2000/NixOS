@@ -2,6 +2,7 @@
     pkgs,
     lib,
     inputs,
+    shared,
     ...
 }:
 {
@@ -46,7 +47,7 @@
     programs = {
         hyprlock =
             let
-                wallpaper = "${pkgs.kdePackages.plasma-workspace-wallpapers}/share/wallpapers/ScarletTree/contents/images/5120x2880.png";
+                wallpaper = shared.wallpaper pkgs;
             in
             {
                 enable = true;
@@ -87,7 +88,6 @@
                     ];
                 };
             };
-        ghostty.settings.font-size = lib.mkForce 13;
     };
     services = {
         # hyprpolkitagent.enable = true;

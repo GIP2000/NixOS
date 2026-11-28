@@ -144,9 +144,7 @@
         gnome-themes-extra
         brightnessctl
         gparted
-        # dconf
     ];
-    # hardware.brightnessctl.enable = true;
 
     boot.extraModprobeConfig = ''
         options snd-hda-intel power_save=0 power_save_controller=N

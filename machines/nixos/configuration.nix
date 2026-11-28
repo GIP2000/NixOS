@@ -13,6 +13,7 @@
         open = false;
         modesetting.enable = true;
     };
+    boot.kernelParams = [ "nvidia-drm.modeset=1" ];
 
     hardware.bluetooth.enable = true;
     hardware.steam-hardware.enable = true;
@@ -26,8 +27,6 @@
     # Bootloader.
     boot.loader.systemd-boot.enable = true;
     boot.loader.efi.canTouchEfiVariables = true;
-
-    boot.kernelParams = [ "nvidia-drm.modeset=1" ];
 
     security.wrappers.chrome-sandbox = {
         setuid = true;
@@ -182,8 +181,6 @@
             user = "greeter";
         };
     };
-
-    programs.dconf.enable = true;
 
     services.pipewire = {
         enable = true;
